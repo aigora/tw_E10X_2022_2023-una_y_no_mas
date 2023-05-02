@@ -1,10 +1,13 @@
-# [Título del trabajo]
+# RED ELECTRICA
 
 [Descripción breve del proyecto a realizar (2-3 frases).]
 
 ## Integrantes del equipo
+Mihail Dimitrov Stanoev(MihailDimitro)
+Alicia Fernandez Sanchez 
+Lucia Alvarez Corado 
+Lucia Alvarez Diaz
 
-[Nombres, apellidos, y usuario GitHub de los integrantes del equipo.]
 
 ## Objetivos del trabajo
 
