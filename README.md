@@ -5,7 +5,7 @@
 ## Integrantes del equipo
 Mihail Dimitrov Stanoev(MihailDimitro)
 Alicia Fernandez Sanchez 
-Lucia Alvarez Corado 
+Lucia Alvarez Corada
 Lucia Alvarez Diaz
 
 
