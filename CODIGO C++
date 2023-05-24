@@ -1,0 +1,51 @@
+#include<stdio.h>
+#include<string.h>
+#include<math.h>
+#include<stdlib.h>
+#include <windows.h>
+
+
+
+void menu();
+
+
+int main(void){
+     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+     SetConsoleOutputCP(CP_UTF8);
+     WriteConsoleW(hConsole, L"ÁÉÍÓÚÑáéíóúñ", 14, NULL, NULL);
+     system("cls");
+
+
+     menu();
+}
+
+void menu()
+{
+    char nombre[30],aux;
+
+    printf("Bienvenido a STATSMAT.\nEsta aplicación esta comprometida a brindarle servicios de estadistica confiables y personalizados que impulsen su exito.\n");
+    printf("Para comenzar a usar esta aplicación, lo primero que necesitariamos seria el nombre del usuario:\n");
+    scanf("%30[^\n]", &nombre);
+    printf("Gracias por usar nuestra aplicación %s.\nA continuación eliga sobre que timpo de información quiere que le hablemos(Pulse el numero deseado):\n",nombre);
+    printf("1.- Emisiones de CO2\n");
+    printf("2.- GWh consumidos\n");
+
+
+     while(scanf("%i",&aux ), aux!=0 &&  aux != 1){
+        while(getchar() != '\n');
+        printf("Eliga un numero entre 1 o 2, por favor.\n");
+    }
+    while(getchar() != '\n');
+
+    if(aux == 1){
+        system("cls");
+        printf("A elegido emisiones CO2 ");
+        //funcion de menu de emisiones CO2
+    }
+
+    if(aux == 2){
+            system("cls");
+            printf("A elegido GWh");
+// funcion menu de GWh
+    }
+}
