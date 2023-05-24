@@ -7,45 +7,102 @@
 
 
 void menu();
+void menu2();
 
 
 int main(void){
      HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
      SetConsoleOutputCP(CP_UTF8);
-     WriteConsoleW(hConsole, L"ÁÉÍÓÚÑáéíóúñ", 14, NULL, NULL);
+     WriteConsoleW(hConsole, L"ÁÉÍÓÚÑáéíóúñ", 14, NULL, NULL); //Comando para que escriba comas y ñ
      system("cls");
 
 
      menu();
+     return 0;
 }
 
-void menu()
-{
-    char nombre[30],aux;
+void menu2() {
 
-    printf("Bienvenido a STATSMAT.\nEsta aplicación esta comprometida a brindarle servicios de estadistica confiables y personalizados que impulsen su exito.\n");
-    printf("Para comenzar a usar esta aplicación, lo primero que necesitariamos seria el nombre del usuario:\n");
-    scanf("%30[^\n]", &nombre);
-    printf("Gracias por usar nuestra aplicación %s.\nA continuación eliga sobre que timpo de información quiere que le hablemos(Pulse el numero deseado):\n",nombre);
+    char opcion;
+    printf("Elige de qué forma quieres comparar los datos:\n\n");
+    printf("a) Por fecha\nb) Por tipo de energía\nc) Por año\nd) Salir\n");
+
+    do {
+        scanf(" %c", &opcion);
+        if (opcion != 'a' && opcion != 'b' && opcion != 'c' && opcion != 'd') {
+            printf("Escribe una de las letras indicadas, por favor.\n");
+        }
+        while (getchar() != '\n');
+    }
+    while (opcion != 'a' && opcion != 'b' && opcion != 'c' && opcion != 'd');// no sale del bucle hasta que no ponga la letra indicada
+
+    switch (opcion) {
+
+        case 'a':
+            system("cls");
+            printf("Has elegido consultar los datos por las fechas.\n");
+            break;
+
+        case 'b':
+            system("cls");
+            printf("Has elegido consultar los datos por el tipo de energía.\n");
+            break;
+
+        case 'c':
+            system("cls");
+            printf("Has elegido consultar los datos por el año.\n");
+            break;
+
+        case 'd':
+            system("cls");
+            printf("Vuelva pronto a consultar nuestros datos pronto.\n");
+            break;
+    }
+}
+
+void menu() {
+    char nombre[30];
+    int aux;
+
+    printf("Bienvenido a STATSMAT.\nEsta aplicación está comprometida a brindarle servicios de estadística confiables y personalizados que impulsen su éxito.\n");
+    printf("Para comenzar a usar esta aplicación, lo primero que necesitaríamos sería el nombre del usuario:\n");
+    scanf("%29[^\n]", nombre);
+    system("cls");
+    printf("Gracias por usar nuestra aplicación, %s.\n\nA continuación elija sobre qué tipo de información quiere que le hablemos (Pulse el número deseado):\n\n", nombre);
     printf("1.- Emisiones de CO2\n");
     printf("2.- GWh consumidos\n");
+    printf("Pulsa 0 si quieres salir\n");
 
+do {
+        while (scanf("%i", &aux) != 1 || (aux != 0 && aux != 1 && aux != 2))
+            {
+            while (getchar() != '\n');
+            printf("Elige un número entre 1 y 2, por favor.\n");
+            }
 
-     while(scanf("%i",&aux ), aux!=0 &&  aux != 1){
-        while(getchar() != '\n');
-        printf("Eliga un numero entre 1 o 2, por favor.\n");
-    }
-    while(getchar() != '\n');
+        while (getchar() != '\n');
 
-    if(aux == 1){
-        system("cls");
-        printf("Ha elegido emisiones CO2 ");
-        //funcion de menu de emisiones CO2
-    }
+        if (aux == 0){
 
-    if(aux == 2){
             system("cls");
-            printf("Ha elegido GWh");
-// funcion menu de GWh
-    }
+            printf("Vuelve cuando quieras, esperamos haberle ayudado.\n");
+            }
+        else
+            {
+            system("cls");
+
+            if (aux == 1) {
+
+                printf("Has elegido emisiones CO2.\n");
+                menu2();
+            }
+            else if (aux == 2) {
+
+                printf("Has elegido GWh.\n");
+                menu2();
+            }
+        }
+    } while (aux != 0);
 }
+
+
