@@ -39,13 +39,13 @@ void menu()
 
     if(aux == 1){
         system("cls");
-        printf("A elegido emisiones CO2 ");
+        printf("Ha elegido emisiones CO2 ");
         //funcion de menu de emisiones CO2
     }
 
     if(aux == 2){
             system("cls");
-            printf("A elegido GWh");
+            printf("Ha elegido GWh");
 // funcion menu de GWh
     }
 }
