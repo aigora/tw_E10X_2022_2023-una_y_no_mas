@@ -1,0 +1,95 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define MAX_DATOS 100 
+
+void ordenarParteDeMayorAMenor(const char* nombreArchivo, int inicio, int fin) {
+    FILE* archivo = fopen(nombreArchivo, "r"); 
+
+    if (archivo) {
+        double datos[MAX_DATOS]; 
+        char palabras[MAX_DATOS][50]; 
+
+        double dato;
+        char palabra[50];
+        int indice = 0;
+        int contadorLineas = 1;
+
+        // Leer el archivo hasta el final o hasta alcanzar la línea final deseada
+        while (fscanf(archivo, "%s %lf", palabra, &dato) != EOF && contadorLineas <= fin) {
+            if (contadorLineas >= inicio) {
+                strcpy(palabras[indice], palabra); 
+                datos[indice] = dato; 
+                indice++;
+            }
+            contadorLineas++;
+        }
+
+        fclose(archivo); 
+
+        
+        for (int i = 0; i < indice - 1; i++) {
+            int max = i;
+            for (int j = i + 1; j < indice; j++) {
+                if (datos[j] > datos[max]) {
+                    max = j;
+                }
+            }
+            if (max != i) {
+                double tempDato = datos[i];
+                char tempPalabra[50];
+                strcpy(tempPalabra, palabras[i]);
+
+                datos[i] = datos[max];
+                strcpy(palabras[i], palabras[max]);
+
+                datos[max] = tempDato;
+                strcpy(palabras[max], tempPalabra);
+            }
+        }
+
+       
+        printf("Datos ordenados de mayor a menor:\n");
+        for (int i = 0; i < indice; i++) {
+            printf("%s: %.4lf GWh\n", palabras[i], datos[i]); 
+        }
+    } else {
+        printf("No se pudo abrir el archivo.\n");
+    }
+}
+
+int main() {
+    const char* nombreArchivo = "ordenadoporfechas.txt"; 
+    int opcion;
+
+    printf("Seleccione una opción de fecha:\n");
+    printf("1. enero,2021\n");
+//    printf("2. Fecha 2\n");
+//    printf("3. Fecha 3\n");
+    printf("Opción: ");
+    scanf("%d", &opcion);
+
+    int inicio, fin;
+    switch (opcion) {
+        case 1:
+            inicio = 1;
+            fin = 17;
+            break;
+//        case 2:
+//            inicio = 11;
+//            fin = 20;
+//            break;
+//        case 3:
+//            inicio = 21;
+//            fin = 30;
+//            break;
+        default:
+            printf("Opción inválida.\n");
+            return 1;
+    }
+
+    ordenarParteDeMayorAMenor(nombreArchivo, inicio, fin);
+
+    return 0;
+}
