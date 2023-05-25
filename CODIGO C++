@@ -8,6 +8,7 @@
 
 void menu();
 void menu2();
+void energias();
 
 
 int main(void){
@@ -20,10 +21,106 @@ int main(void){
      menu();
      return 0;
 }
+void energias(){
+    int energia;
 
+     printf("Elige el tipo de energia del que quieras buscar información:\n");
+     printf("Te ofrecemos una lista de las energías: 1)Hidráulica\n2)Turbinación bombeo\n3)Nuclear\n4)Carbón\n5)Fuel + Gas\n6)Motores diésel\n7)Turbina de gas\n");
+     printf("8)Turbina de vapor\n9)Ciclo combinado\n 10)Eolica\n11)Solar fotovoltaica12)Solar térmica\n13)Otras renovables\n14)Cogeneración\n15)Residuos no renovables\n16)Residuos renovables\n");
+     scanf("%i",&energia);
+     switch (energia){
+
+     case '1':
+        system("cls");
+        printf("Ha elegido la energía Hidráulica.");
+        //Funcion elegir que hacer con ella
+        break;
+     case '2':
+        system("cls");
+        printf("Ha elegido la energía Hidráulica.");
+        //Funcion elegir que hacer con ella
+        break;
+        case '3':
+        system("cls");
+        printf("Ha elegido la energía Hidráulica.");
+        //Funcion elegir que hacer con ella
+        break;
+        case '4':
+        system("cls");
+        printf("Ha elegido la energía Hidráulica.");
+        //Funcion elegir que hacer con ella
+        break;
+         case '5':
+        system("cls");
+        printf("Ha elegido la energía Hidráulica.");
+        //Funcion elegir que hacer con ella
+        break;
+         case '6':
+        system("cls");
+        printf("Ha elegido la energía Hidráulica.");
+        //Funcion elegir que hacer con ella
+        break;
+         case '7':
+        system("cls");
+        printf("Ha elegido la energía Hidráulica.");
+        //Funcion elegir que hacer con ella
+        break;
+         case '8':
+        system("cls");
+        printf("Ha elegido la energía Hidráulica.");
+        //Funcion elegir que hacer con ella
+        break;
+         case '9':
+        system("cls");
+        printf("Ha elegido la energía Hidráulica.");
+        //Funcion elegir que hacer con ella
+        break;
+         case '10':
+        system("cls");
+        printf("Ha elegido la energía Hidráulica.");
+        //Funcion elegir que hacer con ella
+        break;
+         case '11':
+        system("cls");
+        printf("Ha elegido la energía Hidráulica.");
+        //Funcion elegir que hacer con ella
+        break;
+         case '12':
+        system("cls");
+        printf("Ha elegido la energía Hidráulica.");
+        //Funcion elegir que hacer con ella
+        break;
+         case '13':
+        system("cls");
+        printf("Ha elegido la energía Hidráulica.");
+        //Funcion elegir que hacer con ella
+        break;
+         case '14':
+        system("cls");
+        printf("Ha elegido la energía Hidráulica.");
+        //Funcion elegir que hacer con ella
+        break;
+         case '15':
+        system("cls");
+        printf("Ha elegido la energía Hidráulica.");
+        //Funcion elegir que hacer con ella
+        break;
+         case '16':
+        system("cls");
+        printf("Ha elegido la energía Hidráulica.");
+        //Funcion elegir que hacer con ella
+        break;
+
+
+
+
+
+     }
+}
 void menu2() {
 
     char opcion;
+    int mes, year;
     printf("Elige de qué forma quieres comparar los datos:\n\n");
     printf("a) Por fecha\nb) Por tipo de energía\nc) Por año\nd) Salir\n");
 
@@ -41,11 +138,37 @@ void menu2() {
         case 'a':
             system("cls");
             printf("Has elegido consultar los datos por las fechas.\n");
+            printf("Elija la fecha de la que quiere buscar datos entre los años 2021-2022:\n");
+            printf("Introduzca el mes\n");
+
+            do {
+             scanf("%i",&mes);
+             if(mes<0 || mes>13)
+                {
+                 printf("\nMes incorrecto, intentelo de nuevo.\n");
+                }
+
+              } while (mes<0 || mes>13);
+
+            printf("Introduzca el año\n");
+            do{
+             scanf("%i",&year);
+             if( year != 2021 && year != 2022)
+                {
+                 printf("El año introducido no esta en nuestro registro de datos, intentelo de nuevo\n");
+                }
+
+              } while( year != 2021 && year != 2022);
+
+             printf("La fecha elegida es %i-%i", mes, year);
+
+
             break;
 
         case 'b':
             system("cls");
             printf("Has elegido consultar los datos por el tipo de energía.\n");
+            energias();
             break;
 
         case 'c':
@@ -57,6 +180,7 @@ void menu2() {
             system("cls");
             printf("Vuelva pronto a consultar nuestros datos pronto.\n");
             break;
+
     }
 }
 
@@ -78,6 +202,7 @@ do {
             {
             while (getchar() != '\n');
             printf("Elige un número entre 1 y 2, por favor.\n");
+            system("pause");
             }
 
         while (getchar() != '\n');
