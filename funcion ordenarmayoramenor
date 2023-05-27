@@ -1,0 +1,89 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define N 1000 //long max permitida para una linea del .csv
+
+typedef struct {
+    char energia[N];//cadena de caracteres
+    double numeros[24];  // vector de números para las 24 columnas
+} Dato;//estructura llamada datos, que contiene dos campos: nombre y numero
+
+int columna;  // Variable global para almacenar la columna a ordenar
+
+int comparardatos(const void *a, const void *b) {//la utiliza la funcion qsort para ordenar los datos
+    const Dato *datoA = (const Dato *)a;//punteros a datos
+    const Dato *datoB = (const Dato*)b;
+
+    double numeroA = datoA->numeros[columna - 1];//se obtienen valores numericos de la columna especificada
+    double numeroB = datoB->numeros[columna - 1];
+
+    if (numeroA < numeroB) return 1;//si el valor del dato a es menor q el del dato b devuelve 1
+    if (numeroA > numeroB) return -1;
+    return 0;
+}
+//la siguiente funcion se encarga de abrir los archivos, leer los registros del csv y ordenarlos por la columna especificada
+void ordenarmayoramenor(const char *nombreArchivoCSV, const char *nombreArchivoTXT, int col) {
+    FILE *archivoCSV = fopen(nombreArchivoCSV, "r");//lee el csv
+    FILE *archivoTXT = fopen(nombreArchivoTXT, "w");//escribe el .txt resultante
+
+    if (archivoCSV == NULL || archivoTXT == NULL) {
+        printf("Error al abrir los archivos.\n");;//por si alguno de los archivos no se puede abrir
+        return;
+    }
+
+    Dato datos[N];//vector de la estructura registro que se utiliza para almacenar lo leido en el .csv
+    char linea[N];//almacena temporalmente lo leidoen una linea
+    int indice = 0;//realiza el seguimiento del numero de datos leidos en .csv
+
+    // Leer el archivo CSV y guardar los datos en un vector de datos
+    while (fgets(linea, N, archivoCSV) != NULL) {//fgets lee una linea completa del .csv lo almacena en el vector linea, y si no es nula sigue
+        char *token = strtok(linea, ",");//la funcion strtok nos divide la linea en tokens separados por comas
+        strncpy(datos[indice].energia, token, N);//el primer token corresponde a energia y se copia en el campo energia
+
+        for (int i = 0; i < 24; i++) {
+            token = strtok(NULL, ",");
+            datos[indice].numeros[i] = atof(token);//recorre las 24 columnas y convierten los tokens siguientes en numeros y se almacenan en la variable numeros
+        }
+
+        indice++;//se incrementa para leer mas datos
+    }
+
+    int numDatos = indice;//guarda el numero total en una variable
+
+    // Asignar la columna especificada
+    columna = col;
+
+    if (columna < 1 || columna > 24) {
+        printf("Número de columna inválido.\n");
+        return;
+    }
+
+    // Ordenar los datos por número de mayor a menor
+    qsort(datos, numDatos, sizeof(Dato), comparardatos);
+
+    // Mostrar los datos ordenados en la salida estándar
+    printf("Energías de ese año ordenadas de mayor a menor:\n\n");
+    for (int i = 0; i < numDatos; i++) {
+        printf("%s,%.2lf\n", datos[i].energia, datos[i].numeros[columna - 1]);
+    }
+
+    // Escribir los datos ordenados en el archivo de texto
+    for (int i = 0; i < numDatos; i++) {
+        fprintf(archivoTXT, "%s,%.2lf\n", datos[i].energia, datos[i].numeros[columna - 1]);
+    }
+
+    //printf("\n\n\n%s", dato.energia[1]);
+    printf("Archivo generado exitosamente: %s\n", archivoTXT);
+
+    fclose(archivoCSV);
+    fclose(archivoTXT);
+}
+
+////Para el main:
+//
+//const char* archivoCSV = "re.csv";
+//    const char* archivoTXT = "energiasmayoramenorporfechas.txt";
+//    int columna = 3;
+//
+//    ordenarDatos(archivoCSV, archivoTXT, columna);
