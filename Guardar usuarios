@@ -1,0 +1,37 @@
+                 else if (aux == 2) {
+
+                printf("Ver usuarios anteriores.\n");
+                  // Leer el archivo de registro de usuarios
+                FILE *archivo = fopen("usuarios.txt", "a+");
+
+                // Mostrar los nombres de usuarios previamente utilizados
+                printf("Usuarios previos:\n");
+                rewind(archivo); // Volver al inicio del archivo
+                char linea[30];
+                while (fgets(linea, sizeof(linea), archivo) != NULL) {
+                linea[strcspn(linea, "\n")] = '\0'; // Eliminar el salto de línea del final
+                printf("%s\n", linea);
+                }
+                printf("\n");
+
+
+               // Para ver si esta  registrado el nombre
+               rewind(archivo); // Volver al inicio del archivo
+               char nombreEnRegistro[30];
+               int nombreEncontrado = 0;
+               while (fgets(nombreEnRegistro, sizeof(nombreEnRegistro), archivo) != NULL) {
+               nombreEnRegistro[strcspn(nombreEnRegistro, "\n")] = '\0'; // Eliminar el salto de línea del final
+               if (strcmp(nombreEnRegistro, nombre) == 0) {
+               nombreEncontrado = 1;
+               break;
+
+        }
+    }
+             if (!nombreEncontrado) {
+             fprintf(archivo, "%s\n", nombre);
+              }
+
+              fclose(archivo);
+              return 0;
+
+            }
