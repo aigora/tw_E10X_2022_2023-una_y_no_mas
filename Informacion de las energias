@@ -1,4 +1,4 @@
-//HIDRAULICA
+            //HIDRAULICA
             printf("La energía hidráulica es una forma de energía renovable que se obtiene del movimiento del agua, aprovechando su caudal y altura \n");
             printf("Se utiliza a través de la construcción de presas y embalses, donde la energía potencial del agua almacenada se convierte en energía cinética al ser liberada y hacer girar turbinas hidráulicas \n");
             printf(" Esta energía se transforma en electricidad mediante generadores acoplados a las turbinas. \n");
