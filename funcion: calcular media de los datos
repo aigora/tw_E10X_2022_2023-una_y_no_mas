@@ -1,0 +1,75 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define N 1000 // Longitud máxima de la línea en el archivo .csv
+
+typedef struct {
+    char energia[N]; // Cadena de caracteres con una longitud máxima de N
+    double numeros[24]; // Vector que almacena los números de las 24 columnas
+} Dato;
+
+int columna;
+int calculomedia(const char *nombreArchivoCSV, const char *nombreArchivoTXT, int col) {
+    FILE *archivoCSV = fopen(nombreArchivoCSV, "r"); // Lee el archivo CSV
+    FILE *archivoTXT = fopen(nombreArchivoTXT, "w"); // Escribe el archivo de texto resultante
+
+    if (archivoCSV == NULL || archivoTXT == NULL) {
+        printf("Error al abrir los archivos.\n");
+        return 1; // Por si alguno de los archivos no se puede abrir
+    }
+
+    Dato datos[N]; // Vector de la estructura Dato que se utiliza para almacenar lo leído en el archivo .csv
+    char linea[N]; // Almacena temporalmente lo leído en una línea
+    int indice = 0; // Realiza el seguimiento del número de registros leídos en el archivo .csv
+
+    while (fgets(linea, N, archivoCSV) != NULL) { // fgets lee una línea completa del archivo .csv, la almacena en el vector linea y, si no es nula, sigue
+        char *token = strtok(linea, ","); // La función strtok divide la línea en tokens separados por comas
+        strncpy(datos[indice].energia, token, N); // El primer token corresponde al energia y se copia en el campo energia
+
+        for (int i = 0; i < 24; i++) {
+            token = strtok(NULL, ",");
+            datos[indice].numeros[i] = atof(token); // Recorre las 24 columnas y convierte los tokens siguientes en números y los almacena en la variable numeros
+        }
+
+        indice++; // Se incrementa para leer más datos
+    }
+
+    int numDatos = indice; // Guarda el número total en una variable
+    columna = col;
+
+    if (columna < 1 || columna > 24) {
+        printf("Número de columna inválido.\n");
+        return 1;
+    }
+
+    // Calcular la media de los datos en la columna seleccionada, excepto la última fila
+    double suma = 0.0;
+    for (int i = 0; i < numDatos - 1; i++) {
+        suma += datos[i].numeros[columna - 1];
+    }
+    double media = suma / (numDatos - 1);
+
+    // Mostrar la media en la salida del compilador
+    printf("Media de las energías de ese año %d: %.2lf\n", columna, media);
+
+    // Escribir la media en el archivo de texto
+    fprintf(archivoTXT, "Media de las energías de ese año %d: %.2lf\n", columna, media);
+
+    printf("Archivo generado exitosamente: calculomediaporfechas.txt\n");
+
+    fclose(archivoCSV);
+    fclose(archivoTXT);
+
+    return 0;
+}
+
+//////para el main:
+////    const char *nombreArchivoCSV = "re.csv";
+////    const char *nombreArchivoTXT = "calculomediaporfechas.txt";
+////    int columna;
+////
+////    calculomedia(nombreArchivoCSV, nombreArchivoTXT, columna);
+////
+////    return 0;
+////}
