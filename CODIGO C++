@@ -25,6 +25,33 @@ int main(void){
      menu();
      return 0;
 }
+void imprimir_fichero_texto_antiguos() {
+    // Lee los antiguos ficheros
+    char *fichero_antiguos[] = {"calculomediaporenergias.txt","yearymesdemasgasto.txt","energiasmayoramenorporfechas.txt","energiasmayorporfechas.txt","calculomediaporfechas.txt"};
+    int num_dato= sizeof(fichero_antiguos) / sizeof(fichero_antiguos[0]);
+    int encontrado =0;
+    for (int i = 0; i < num_dato; i++) {
+        FILE *dato = fopen(fichero_antiguos[i], "r");
+        if (dato) {
+            printf("\nContenido anterior de %s:\n\n", fichero_antiguos[i]);
+
+            char linea[10000];
+            while (fgets(linea, sizeof(linea), dato) != NULL) {
+                printf("%s", linea);
+            }
+
+            printf("\n\n\n\n\n");
+            fclose(dato);
+         } else if (strstr(fichero_antiguos[i], ".txt") != NULL) {
+            printf("El archivo %s no existe.\n", fichero_antiguos[i]);
+        }
+    }
+
+    if (!encontrado) {
+        printf("No se encontraron archivos .txt para mostrar.\n");
+    }
+}
+
 typedef struct {
     char energia1[N];
     double numeros1[24];
@@ -89,11 +116,78 @@ fila = energia;
 
     return 0;
 }
+void yearymesdemasgasto(const char *nombreArchivoCSV, const char *nombreArchivo5TXT, int fil, int energia) {
+    FILE *archivoCSV = fopen(nombreArchivoCSV, "r"); // Lee el archivo CSV
+    FILE *archivo5TXT = fopen(nombreArchivo5TXT, "w"); // Escribe el archivo de texto resultante
+
+    if (archivoCSV == NULL || archivo5TXT == NULL) {
+        printf("Error al abrir los archivos.\n");
+        return 1;
+    }
+
+    Dato1 datos[N];
+    char linea[N];
+    int indice = 0;
+
+    while (fgets(linea, N, archivoCSV) != NULL) {
+        char *token = strtok(linea, ",");
+        strncpy(datos[indice].energia1, token, N);
+
+        for (int i = 0; i < 24; i++) {
+            token = strtok(NULL, ",");
+            datos[indice].numeros1[i] = atof(token);
+        }
+
+        indice++;
+    }
+
+    int numRegistros = indice;
+    fila=fil;
+
+    int fila;
+    fila = energia;
+//    printf("Ingrese el número de fila para comparar las columnas (1-%d): ", numRegistros);
+//    scanf("%d", &fila);
+
+    if (fila < 1 || fila > numRegistros) {
+        printf("Número de fila inválido.\n");
+        return 1;
+    }
+
+    double maximo = datos[fila - 1].numeros1[0]; // Asignamos el primer valor de la fila como máximo
+    int columnaMaxima = 1; // Almacenamos el índice de la columna con el máximo valor
+
+    for (int i = 1; i < 24; i++) {
+        if (datos[fila - 1].numeros1[i] > maximo) {
+            maximo = datos[fila - 1].numeros1[i];
+            columnaMaxima = i + 1; // Sumamos 1 para obtener el número de columna correspondiente
+        }
+    }
+    if (columnaMaxima > 1 && columnaMaxima < 12) {
+        printf("El dato mayor de la energía elegida es %.2lf, que corresponde a : %i-2021\n ", maximo, columnaMaxima);
+    } else if (columnaMaxima > 12 && columnaMaxima < 24) {
+        printf("El dato mayor de la energía elegida es %.2lf, que corresponde a : %i-2022\n ", maximo, columnaMaxima-12);
+    }
+
+  if (columnaMaxima > 1 && columnaMaxima < 12) {
+        fprintf(archivo5TXT,"El dato mayor de la energía elegida es %.2lf, que corresponde a : %i-2021\n ", maximo, columnaMaxima);
+    } else if (columnaMaxima > 12 && columnaMaxima < 24) {
+        fprintf(archivo5TXT,"El dato mayor de la energía elegida es %.2lf, que corresponde a : %i-2022\n ", maximo, columnaMaxima-12);
+    }
+
+    printf("Archivo generado exitosamente: datos1.txt\n");
+
+    fclose(archivoCSV);
+    fclose(archivo5TXT);
+
+    return 0;
+}
 
 void menuenergias(char nombreenergia[], int energia){
     char opcion;
     const char *nombreArchivoCSV = "re.csv";
     const char *nombreArchivo4TXT = "calculomediaporenergias.txt";
+    const char *nombreArchivo5TXT = "yearymesdemasgasto.txt";
     printf("Pulsa el número de lo que desee buscar:\na)Información sobre esta %s\nb)Hacer la media de todos los datos obtenidos de %s\nc)Año con más gasto\nd)Salir",nombreenergia,nombreenergia);
     do {
         scanf(" %c", &opcion);
@@ -244,8 +338,9 @@ void menuenergias(char nombreenergia[], int energia){
 
         case 'c':
             system("cls");
-            printf("Has elegido buscar el año con más gasto\n");
-            printf("Elige 2021 o 2022\n");// hacer una funcion que de la energia elegida te busque la fecha en la que mas gasto y cuanto gasto
+            printf("Has elegido buscar el año y mes con más gasto\n");
+            yearymesdemasgasto(nombreArchivoCSV, nombreArchivo5TXT, fila,energia);
+            // hacer una funcion que de la energia elegida te busque la fecha en la que mas gasto y cuanto gasto
 
             break;
 
@@ -573,7 +668,7 @@ void menu2() {
     const char *nombreArchivo3TXT = "calculomediaporfechas.txt";
     int columna = 4;
     printf("Elige de qué forma quieres comparar los datos:\n\n");
-    printf("a) Por fecha\nb) Por tipo de energía\nc) Por año\nd) Salir\n");
+    printf("a) Por fecha\nb) Por tipo de energía\nc) Salir\n");
 
     do {
         scanf(" %c", &opcion);
@@ -665,24 +760,6 @@ void menu2() {
 
         case 'c':
             system("cls");
-            printf("Has elegido consultar los datos por el año.\n");
-            printf("Elige 2021 o 2022\n");
-            do{
-             scanf("%i",&year2);
-             if( year2 != 2021 && year2 != 2022)
-                {
-                 printf("El año introducido no esta en nuestro registro de datos, intentelo de nuevo\n");
-                }
-
-              } while( year2 != 2021 && year2 != 2022);
-              printf("Le buscaremos información del año %i", year2);
-
-
-            break;
-
-
-        case 'd':
-            system("cls");
             printf("Vuelva pronto a consultar nuestros datos pronto.\n");
             break;
 
@@ -697,16 +774,17 @@ void menu() {
     printf("Para comenzar a usar esta aplicación, lo primero que necesitaríamos sería el nombre del usuario:\n");
     scanf("%29[^\n]", nombre);
     system("cls");
-    printf("Gracias por usar nuestra aplicación, %s.\n\nA continuación elija sobre qué tipo de información quiere que le hablemos (Pulse el número deseado):\n\n", nombre);
-    printf("1.- Emisiones de CO2\n");
-    printf("2.- GWh consumidos\n");
+    printf("Gracias por usar nuestra aplicación, %s.\n\nA continuación elija lo que desea hacer (Pulse el número deseado):\n\n", nombre);
+    printf("1.- GWh consumidos\n");
+    printf("2.- Ver usuarios anteriores\n");
+    printf("3.- Ultimos datos buscados\n");
     printf("Pulsa 0 si quieres salir\n");
 
 do {
-        while (scanf("%i", &aux) != 1 || (aux != 0 && aux != 1 && aux != 2))
+        while (scanf("%i", &aux) != 1 || (aux != 0 && aux != 1 && aux != 2 && aux !=3))
             {
             while (getchar() != '\n');
-            printf("Elige un número entre 1 y 2, por favor.\n");
+            printf("Elige un número entre 1, 2 y 3, por favor.\n");
             system("pause");
             }
 
@@ -723,17 +801,53 @@ do {
 
             if (aux == 1) {
 
-                printf("Has elegido emisiones CO2.\n");
+                printf("Has elegido GWh.\n");
                 menu2();
             }
             else if (aux == 2) {
 
-                printf("Has elegido GWh.\n");
-                menu2();
+                printf("Ver usuarios anteriores.\n");
+                  // Leer el archivo de registro de usuarios
+                FILE *archivo = fopen("usuarios.txt", "a+");
+
+                // Mostrar los nombres de usuarios previamente utilizados
+                printf("Usuarios previos:\n");
+                rewind(archivo); // Volver al inicio del archivo
+                char linea[30];
+                while (fgets(linea, sizeof(linea), archivo) != NULL) {
+                linea[strcspn(linea, "\n")] = '\0'; // Eliminar el salto de línea del final
+                printf("%s\n", linea);
+                }
+                printf("\n");
+
+
+               // Verificar si el nombre ya está en el registro
+               rewind(archivo); // Volver al inicio del archivo
+               char nombreEnRegistro[30];
+               int nombreEncontrado = 0;
+               while (fgets(nombreEnRegistro, sizeof(nombreEnRegistro), archivo) != NULL) {
+               nombreEnRegistro[strcspn(nombreEnRegistro, "\n")] = '\0'; // Eliminar el salto de línea del final
+               if (strcmp(nombreEnRegistro, nombre) == 0) {
+               nombreEncontrado = 1;
+               break;
+
+        }
+    }
+             if (!nombreEncontrado) {
+             fprintf(archivo, "%s\n", nombre);
+              }
+
+              fclose(archivo);
+              return 0;
+
+            }
+            else if(aux == 3){
+                printf("Ultimos datos buscados.\n");
+                imprimir_fichero_texto_antiguos();
+                return 0;
             }
         }
     } while (aux != 0);
 }
-
 
 
