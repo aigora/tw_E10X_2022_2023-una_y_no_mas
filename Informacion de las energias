@@ -3,13 +3,18 @@
             printf("Se utiliza a través de la construcción de presas y embalses, donde la energía potencial del agua almacenada se convierte en energía cinética al ser liberada y hacer girar turbinas hidráulicas \n");
             printf(" Esta energía se transforma en electricidad mediante generadores acoplados a las turbinas. \n");
             printf("La energía hidráulica es una fuente limpia y sostenible, ya que el agua es un recurso natural abundante y no se emiten gases de efecto invernadero durante su producción, lo que contribuye a la reducción de la contaminación y el impacto ambiental. \n");
+            //HIDROÉOLICA
+            printf("La energía hidroeléctrica es una forma de energía renovable que se obtiene mediante la combinación de energía hidráulica y eólica \n");
+            printf("Se aprovecha el movimiento del agua en ríos o embalses para accionar turbinas, generando electricidad.\n ");
+            printf("Este sistema combina la confiabilidad y constancia de los flujos de agua con la variabilidad y disponibilidad del viento.");
+            printf("Es una fuente de energía limpia, no emite gases de efecto invernadero y contribuye a la reducción de la dependencia de combustibles fósiles.\n");
+            printf("Sin embargo, su implementación requiere considerar impactos ambientales y sociales, así como la disponibilidad de recursos hídricos y eólicos.\n");
             //TURBINACIÓN BOMBEO
             printf("La energía de turbinación de bombeo es un método de almacenamiento de energía que implica utilizar dos embalses de agua a diferentes alturas.\n");
             printf("Durante los períodos de baja demanda energética, el exceso de electricidad se utiliza para bombear agua desde un embalse inferior al embalse superior. \n");
             printf("Luego, cuando se necesita energía adicional, el agua se deja fluir hacia abajo a través de turbinas, generando electricidad mediante la conversión de la energía cinética del agua en energía eléctrica.\n");
             printf("Este proceso permite almacenar energía cuando hay un exceso y liberarla cuando se requiere, proporcionando una solución eficiente para el equilibrio de la demanda y la oferta de electricidad en el sistema de energía. \n");
-  
-  printf("Además, puede ayudar a integrar energías renovables intermitentes en la red eléctrica. \n");
+            printf("Además, puede ayudar a integrar energías renovables intermitentes en la red eléctrica. \n");
             //NUCLEAR
             printf("La energía nuclear es una forma de energía que se obtiene mediante reacciones nucleares, específicamente la fisión o fusión de átomos. \n");
             printf("En la fisión nuclear, los núcleos de átomos pesados, como el uranio, se dividen en fragmentos más pequeños, liberando una gran cantidad de energía en forma de calor./n");
