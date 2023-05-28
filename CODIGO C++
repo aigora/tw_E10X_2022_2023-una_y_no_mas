@@ -3,13 +3,14 @@
 #include<math.h>
 #include<stdlib.h>
 #include <windows.h>
+#define N 1000
 
 
 
 void menu();
 void menu2();
 void energias();
-void menuenergias();
+void menuenergias(char nombreenergia[], int energia);
 
 
 int main(void){
@@ -20,12 +21,79 @@ int main(void){
 
 
 
+
      menu();
      return 0;
 }
+typedef struct {
+    char energia1[N];
+    double numeros1[24];
+} Dato1;
+int fila;
 
-void menuenergias(char nombreenergia[]){
+void calculomediaporenergias(const char *nombreArchivoCSV, const char *nombreArchivo4TXT, int fil, int energia) {
+
+    FILE *archivoCSV = fopen(nombreArchivoCSV, "r"); // Lee el archivo CSV
+    FILE *archivo4TXT = fopen(nombreArchivo4TXT, "w"); // Escribe el archivo de texto resultante
+
+    if (archivoCSV == NULL || archivo4TXT == NULL) {
+        printf("Error al abrir los archivos.\n");
+        return 1;
+    }
+
+    Dato1 datos[N];
+    char linea[N];
+    int indice = 0;
+
+    while (fgets(linea, N, archivoCSV) != NULL) {
+        char *token = strtok(linea, ",");
+        strncpy(datos[indice].energia1, token, N);
+
+        for (int i = 0; i < 24; i++) {
+            token = strtok(NULL, ",");
+            datos[indice].numeros1[i] = atof(token);
+        }
+
+        indice++;
+    }
+
+    int numRegistros = indice;
+    fila=fil;
+
+    int fila;
+//    printf("Ingrese el número de fila para calcular la media (1-%d): ", numRegistros);
+//    scanf("%d", &fila);
+fila = energia;
+
+    if (fila < 1 || fila > numRegistros) {
+        printf("Número de fila inválido.\n");
+        return 1;//verifica que el numero de fila es valido
+    }
+
+    double suma = 0.0;//almacena la suma de los numeros de la fila seleccionada
+
+    for (int i = 0; i < 24; i++) {
+        suma += datos[fila - 1].numeros1[i];
+
+    }
+
+    double media = suma / 24;//divide suma entre el numero de columnas
+
+    printf("Media de la energía seleccionada durante los años 2021 y 2022: %.2lf\n GWh",media);
+    fprintf(archivo4TXT, "Media de la energía seleccionada durante los años 2021 y 2022: %.2lf\n GWh",media);
+
+    //printf("Archivo generado exitosamente: \n");
+
+    fclose(archivoCSV);
+    fclose(archivo4TXT);
+
+    return 0;
+}
+
+void menuenergias(char nombreenergia[], int energia){
     char opcion;
+    const char *nombreArchivoCSV = "re.csv";
+    const char *nombreArchivo4TXT = "calculomediaporenergias.txt";
     printf("Pulsa el número de lo que desee buscar:\na)Información sobre esta %s\nb)Hacer la media de todos los datos obtenidos de %s\nc)Año con más gasto\nd)Salir",nombreenergia,nombreenergia);
     do {
         scanf(" %c", &opcion);
@@ -170,6 +238,8 @@ void menuenergias(char nombreenergia[]){
         case 'b':
             system("cls");
             printf("Has elegido hacer la media de todos los datos obtenidos.\n");
+            calculomediaporenergias(nombreArchivoCSV, nombreArchivo4TXT, fila, energia);
+
             break;
 
         case 'c':
@@ -193,8 +263,8 @@ void energias(){
     char nombreenergia[20];
 
      printf("Elige el tipo de energia del que quieras buscar información:\n");
-     printf("Te ofrecemos una lista de las energías:\n1)Hidráulica\n2)Turbinación bombeo\n3)Nuclear\n4)Carbón\n6)Motores diésel\n7)Turbina de gas\n");
-     printf("8)Turbina de vapor\n9)Ciclo combinado\n10)Eolica\n11)Solar fotovoltaica12)Solar térmica\n13)Otras renovables\n14)Cogeneración\n15)Residuos no renovables\n16)Residuos renovables\n");
+     printf("Te ofrecemos una lista de las energías:\n1)Hidráulica\n2)Turbinación bombeo\n3)Nuclear\n4)Carbón\n5)Motores diésel\n6)Turbina de gas\n");
+     printf("7)Turbina de vapor\n8)Ciclo combinado\n9)Eolica\n10)Solar fotovoltaica\n11)Solar térmica\n12)Otras renovables\n13)Cogeneración\n14)Residuos no renovables\n15)Residuos renovables\n");
      scanf("%i",&energia);
      switch (energia){
 
@@ -202,97 +272,97 @@ void energias(){
         system("cls");
         strcpy(nombreenergia, "Hidráulica");
         printf("Ha elegido la energía Hidráulica.");
-        menuenergias(nombreenergia);
+        menuenergias(nombreenergia,energia);
         break;
      case 2:
         system("cls");
         strcpy(nombreenergia, "Turbinación bombeo");
         printf("Ha elegido la energía Turbinación bombeo.");
-        menuenergias(nombreenergia);
+        menuenergias(nombreenergia,energia);
         break;
      case 3:
         system("cls");
         strcpy(nombreenergia, "Nuclear");
         printf("Ha elegido la energía Nuclear.");
-        menuenergias(nombreenergia);
+        menuenergias(nombreenergia,energia);
         break;
      case 4:
         system("cls");
         strcpy(nombreenergia, "Carbón");
         printf("Ha elegido la energía Carbón.");
-        menuenergias(nombreenergia);
+        menuenergias(nombreenergia,energia);
         break;
      case 5:
         system("cls");
         strcpy(nombreenergia, "Motores diésel");
         printf("Ha elegido la energía Motores diésel.");
-        menuenergias(nombreenergia);
+        menuenergias(nombreenergia,energia);
         break;
      case 6:
         system("cls");
         strcpy(nombreenergia, "Turbina de gas");
         printf("Ha elegido la energía Turbina de gas.");
-        menuenergias(nombreenergia);
+        menuenergias(nombreenergia,energia);
         break;
      case 7:
         system("cls");
         strcpy(nombreenergia, "Turbina de vapor");
         printf("Ha elegido la energía Turbina de vapor.");
-        menuenergias(nombreenergia);
+        menuenergias(nombreenergia,energia);
         break;
      case 8:
         system("cls");
         strcpy(nombreenergia, "Ciclo combinado");
         printf("Ha elegido la energía Ciclo combinado.");
-        menuenergias(nombreenergia);
+        menuenergias(nombreenergia,energia);
         break;
      case 9:
         system("cls");
         strcpy(nombreenergia, "Hidroeolica");
         printf("Ha elegido la energía Hidroeolica.");
-        menuenergias(nombreenergia);
+        menuenergias(nombreenergia,energia);
         break;
      case 10:
         system("cls");
         strcpy(nombreenergia, "Eolica");
         printf("Ha elegido la energía Eolica.");
-        menuenergias(nombreenergia);
+        menuenergias(nombreenergia,energia);
         break;
      case 11:
         system("cls");
         strcpy(nombreenergia, "Solar fotovoltaica");
         printf("Ha elegido la energía Solar fotovoltaica.");
-        menuenergias(nombreenergia);
+        menuenergias(nombreenergia,energia);
         break;
      case 12:
         system("cls");
         strcpy(nombreenergia, "Solar Térmica");
         printf("Ha elegido la energía Solar térmica.");
-        menuenergias(nombreenergia);
+        menuenergias(nombreenergia,energia);
         break;
      case 13:
         system("cls");
         strcpy(nombreenergia, "Otras renovables");
         printf("Ha elegido la energía Otras renovables.");
-        menuenergias(nombreenergia);
+        menuenergias(nombreenergia,energia);
         break;
      case 14:
         system("cls");
         strcpy(nombreenergia, "Cogeneración");
         printf("Ha elegido la energía Cogeneración.");
-        menuenergias(nombreenergia);
+        menuenergias(nombreenergia,energia);
         break;
      case 15:
         system("cls");
         strcpy(nombreenergia, "Residuos no renovables");
         printf("Ha elegido la energía Residuos no renovables.");
-        menuenergias(nombreenergia);
+        menuenergias(nombreenergia,energia);
         break;
      case 16:
         system("cls");
         strcpy(nombreenergia, "Residuos renovables");
         printf("Ha elegido la energía Residuos renovables.");
-        menuenergias(nombreenergia);
+        menuenergias(nombreenergia,energia);
         break;
      default:
         printf("Opción inválida.\n");
@@ -305,12 +375,203 @@ void energias(){
      }
 }
 
+typedef struct {
+    char energia[N];//cadena de caracteres
+    double numeros[24];  // vector de números para las 24 columnas
+} Dato;//estructura llamada datos, que contiene dos campos: nombre y numero
+
+  int columna;  // Variable global para almacenar la columna a ordenar
+
+int comparardatos(const void *a, const void *b) {//la utiliza la funcion qsort para ordenar los datos
+    const Dato *datoA = (const Dato *)a;//punteros a datos
+    const Dato *datoB = (const Dato*)b;
+
+    double numeroA = datoA->numeros[columna - 1];//se obtienen valores numericos de la columna especificada
+    double numeroB = datoB->numeros[columna - 1];
+
+    if (numeroA < numeroB) return 1;//si el valor del dato a es menor q el del dato b devuelve 1
+    if (numeroA > numeroB) return -1;
+    return 0;
+}
+
+//la siguiente funcion se encarga de abrir los archivos, leer los registros del csv y ordenarlos por la columna especificada
+void ordenarmayoramenor(const char *nombreArchivoCSV, const char *nombreArchivoTXT, int col) {
+    FILE *archivoCSV = fopen(nombreArchivoCSV, "r");//lee el csv
+    FILE *archivoTXT = fopen(nombreArchivoTXT, "w");//escribe el .txt resultante
+
+    if (archivoCSV == NULL || archivoTXT == NULL) {
+        printf("Error al abrir los archivos.\n");;//por si alguno de los archivos no se puede abrir
+        return;
+    }
+
+    Dato datos[N];//vector de la estructura registro que se utiliza para almacenar lo leido en el .csv
+    char linea[N];//almacena temporalmente lo leidoen una linea
+    int indice = 0;//realiza el seguimiento del numero de datos leidos en .csv
+
+    // Leer el archivo CSV y guardar los datos en un vector de datos
+    while (fgets(linea, N, archivoCSV) != NULL) {//fgets lee una linea completa del .csv lo almacena en el vector linea, y si no es nula sigue
+        char *token = strtok(linea, ",");//la funcion strtok nos divide la linea en tokens separados por comas
+        strncpy(datos[indice].energia, token, N);//el primer token corresponde a energia y se copia en el campo energia
+
+        for (int i = 0; i < 24; i++) {
+            token = strtok(NULL, ",");
+            datos[indice].numeros[i] = atof(token);//recorre las 24 columnas y convierten los tokens siguientes en numeros y se almacenan en la variable numeros
+        }
+
+        indice++;//se incrementa para leer mas datos
+    }
+
+    int numDatos = indice;//guarda el numero total en una variable
+
+    // Asignar la columna especificada
+    columna = col;
+
+    if (columna < 1 || columna > 24) {
+        printf("Número de columna inválido.\n");
+        return;
+    }
+
+    // Ordenar los datos por número de mayor a menor
+    qsort(datos, numDatos, sizeof(Dato), comparardatos);
+
+    // Mostrar los datos ordenados en la salida estándar
+    printf("Energías de ese año ordenadas de mayor a menor:\n\n");
+    for (int i = 0; i < numDatos; i++) {
+        printf("%s,%.2lf\n", datos[i].energia, datos[i].numeros[columna - 1]);
+    }
+
+    // Escribir los datos ordenados en el archivo de texto
+    for (int i = 0; i < numDatos; i++) {
+        fprintf(archivoTXT, "%s,%.2lf\n", datos[i].energia, datos[i].numeros[columna - 1]);
+    }
+
+    //printf("\n\n\n%s", dato.energia[1]);
+    printf("Archivo generado exitosamente: %s\n", archivoTXT);
+
+    fclose(archivoCSV);
+    fclose(archivoTXT);
+}
+void masgasta(const char *nombreArchivoCSV, const char *nombreArchivo2TXT, int col) {
+    FILE *archivoCSV = fopen(nombreArchivoCSV, "r");//lee el csv
+    FILE *archivo2TXT = fopen(nombreArchivo2TXT, "w");//escribe el .txt resultante
+
+    if (archivoCSV == NULL || archivo2TXT == NULL) {
+        printf("Error al abrir los archivos.\n");;//por si alguno de los archivos no se puede abrir
+        return;
+    }
+
+    Dato datos[N];//vector de la estructura registro que se utiliza para almacenar lo leido en el .csv
+    char linea[N];//almacena temporalmente lo leidoen una linea
+    int indice = 0;//realiza el seguimiento del numero de datos leidos en .csv
+
+    // Leer el archivo CSV y guardar los datos en un vector de datos
+    while (fgets(linea, N, archivoCSV) != NULL) {//fgets lee una linea completa del .csv lo almacena en el vector linea, y si no es nula sigue
+        char *token = strtok(linea, ",");//la funcion strtok nos divide la linea en tokens separados por comas
+        strncpy(datos[indice].energia, token, N);//el primer token corresponde a energia y se copia en el campo energia
+
+        for (int i = 0; i < 24; i++) {
+            token = strtok(NULL, ",");
+            datos[indice].numeros[i] = atof(token);//recorre las 24 columnas y convierten los tokens siguientes en numeros y se almacenan en la variable numeros
+        }
+
+        indice++;//se incrementa para leer mas datos
+    }
+
+    int numDatos = indice;//guarda el numero total en una variable
+
+    // Asignar la columna especificada
+    columna = col;
+
+    if (columna < 1 || columna > 24) {
+        printf("Número de columna inválido.\n");
+        return;
+    }
+
+    // Ordenar los datos por número de mayor a menor
+    qsort(datos, numDatos, sizeof(Dato), comparardatos);
+
+    // Mostrar los datos en la salida estándar
+    printf("Este es la energía mas gastada de ese año:\n\n");
+
+    printf("%s,%.2lf\n", datos[1].energia, datos[1].numeros[columna - 1]);
+
+
+   //Mostrar los datos en el .txt
+    fprintf(archivo2TXT, "Esta es la energía más gastada de ese año:\n\n");
+    fprintf(archivo2TXT, "%s,%.2lf\n", datos[0].energia, datos[0].numeros[col - 1]);
+
+
+    //printf("\n\n\n%s", dato.energia[1]);
+    printf("Archivo generado exitosamente: %s\n", nombreArchivo2TXT);
+
+    fclose(archivoCSV);
+    fclose(archivo2TXT);
+}
+void calculomedia(const char *nombreArchivoCSV, const char *nombreArchivo3TXT, int col) {
+    FILE *archivoCSV = fopen(nombreArchivoCSV, "r"); // Lee el archivo CSV
+    FILE *archivo3TXT = fopen(nombreArchivo3TXT, "w"); // Escribe el archivo de texto resultante
+
+    if (archivoCSV == NULL || archivo3TXT == NULL) {
+        printf("Error al abrir los archivos.\n");
+        return 1; // Por si alguno de los archivos no se puede abrir
+    }
+
+    Dato datos[N]; // Vector de la estructura Dato que se utiliza para almacenar lo leído en el archivo .csv
+    char linea[N]; // Almacena temporalmente lo leído en una línea
+    int indice = 0; // Realiza el seguimiento del número de registros leídos en el archivo .csv
+
+    while (fgets(linea, N, archivoCSV) != NULL) { // fgets lee una línea completa del archivo .csv, la almacena en el vector linea y, si no es nula, sigue
+        char *token = strtok(linea, ","); // La función strtok divide la línea en tokens separados por comas
+        strncpy(datos[indice].energia, token, N); // El primer token corresponde al energia y se copia en el campo energia
+
+        for (int i = 0; i < 24; i++) {
+            token = strtok(NULL, ",");
+            datos[indice].numeros[i] = atof(token); // Recorre las 24 columnas y convierte los tokens siguientes en números y los almacena en la variable numeros
+        }
+
+        indice++; // Se incrementa para leer más datos
+    }
+
+    int numDatos = indice; // Guarda el número total en una variable
+    columna = col;
+
+    if (columna < 1 || columna > 24) {
+        printf("Número de columna inválido.\n");
+        return 1;
+    }
+
+    // Calcular la media de los datos en la columna seleccionada, excepto la última fila
+    double suma = 0.0;
+    for (int i = 0; i < numDatos - 1; i++) {
+        suma += datos[i].numeros[columna - 1];
+    }
+    double media = suma / (numDatos - 1);
+
+    // Mostrar la media en la salida del compilador
+    printf("Media de las energías de ese año : %.2lf\n", media);
+
+    // Escribir la media en el archivo de texto
+    fprintf(archivo3TXT, "Media de las energías de ese año : %.2lf\n", media);
+
+
+
+    fclose(archivoCSV);
+    fclose(archivo3TXT);
+
+    return 0;
+}
 
 
 void menu2() {
 
-    char opcion;
-    int mes, year, year2,k, columna;
+    char opcion,opcion2;
+    int mes, year, year2,k;
+    const char* archivoCSV = "re.csv";
+    const char* archivoTXT = "energiasmayoramenorporfechas.txt";
+    const char* archivo2TXT = "energiasmayorporfechas.txt";
+    const char *nombreArchivoCSV = "re.csv";
+    const char *nombreArchivo3TXT = "calculomediaporfechas.txt";
+    int columna = 4;
     printf("Elige de qué forma quieres comparar los datos:\n\n");
     printf("a) Por fecha\nb) Por tipo de energía\nc) Por año\nd) Salir\n");
 
@@ -360,7 +621,40 @@ void menu2() {
                 {
                   k=12;
                 }
+                columna= k + mes;
 
+                printf("Que desea saber de esta fecha:\nA)Ordenar los datos de mayor a menos.\nB)Media de todos los datos de esa fecha.\nC)Mostrar que energía gasto más en esa fecha.\nD)Salir\n");
+                 do {
+                 scanf(" %c", &opcion2);
+                 if (opcion2 != 'A' && opcion2 != 'B' && opcion2 != 'C' && opcion2 != 'D') {
+                 printf("Escribe una de las letras indicadas, por favor. Quizas no la este poniendo en mayuscula.\n");
+                   }
+                   while (getchar() != '\n');
+                   }
+                   while (opcion2 != 'A' && opcion2 != 'B' && opcion2 != 'C' && opcion2 != 'D');// no sale del bucle hasta que no ponga la letra indicada
+                   switch (opcion2) {
+
+                       case 'A':
+                           system("cls");
+                           printf("A continuación le mostramos una lista de los datos en esta fecha %i-%i ordenados de mayor a menor.\n",mes, year);
+                           ordenarmayoramenor(archivoCSV,archivoTXT,columna);
+                       break;
+                       case 'B':
+                           system("cls");
+                           printf("A contunación le mostraremos la media de los datos en esta fecha %i-%i.\n",mes,year);
+                           calculomedia(nombreArchivoCSV, nombreArchivo3TXT, columna);
+
+                           break;
+                       case 'C':
+                           system("cls");
+                           printf("A continuación le mostraremos la energía que más gasta en esta fecha %i-%i\n",mes,year);
+                           masgasta(archivoCSV,archivo2TXT,columna);
+                           break;
+                        case 'D':
+                           system("cls");
+                           printf("Vuelva pronto a consultar nuestros datos pronto.\n");
+                           break;
+                   }
             break;
 
         case 'b':
@@ -440,5 +734,6 @@ do {
         }
     } while (aux != 0);
 }
+
 
 
