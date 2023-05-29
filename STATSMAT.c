@@ -824,24 +824,24 @@ do {
             system("cls");
             menu2(nombre);
             }
-        else if (aux == 2) {
-
+     else if (aux == 2) {
+             system("cls");
             printf("Ver usuarios anteriores.\n");
                   // Leer el archivo de registro de usuarios
-            FILE *archivo = fopen("usuarios.txt", "a+");
+                FILE *archivo = fopen("usuarios.txt", "a+");
 
                 // Mostrar los nombres de usuarios previamente utilizados
-            printf("Usuarios previos:\n");
-            rewind(archivo); // Volver al inicio del archivo
-            char linea[30];
-            while (fgets(linea, sizeof(linea), archivo) != NULL) {
-            linea[strcspn(linea, "\n")] = '\0'; // Eliminar el salto de línea del final
-            printf("%s\n", linea);
-            }
-            printf("\n");
+                printf("Usuarios previos:\n");
+                rewind(archivo); // Volver al inicio del archivo
+                char linea[30];
+                while (fgets(linea, sizeof(linea), archivo) != NULL) {
+                linea[strcspn(linea, "\n")] = '\0'; // Eliminar el salto de línea del final
+                printf("%s\n", linea);
+                }
+                printf("\n");
 
 
-               // Verificar si el nombre ya está en el registro
+               // Para ver si esta  registrado el nombre
                rewind(archivo); // Volver al inicio del archivo
                char nombreEnRegistro[30];
                int nombreEncontrado = 0;
@@ -858,7 +858,7 @@ do {
               }
 
               fclose(archivo);
-              return menu(nombre);
+              return 0;
 
             }
             else if(aux == 3){
