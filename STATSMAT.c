@@ -20,10 +20,7 @@ void calculomedia(const char *nombreArchivoCSV, const char *nombreArchivo3TXT, i
 
 
 int main(void){
-     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-     SetConsoleOutputCP(CP_UTF8);
-     WriteConsoleW(hConsole, L"ÁÉÍÓÚÑáéíóúñ", 14, NULL, NULL); //Comando para que escriba comas y ñ
-     system("cls");
+
 
      char nombre[30];
      printf("Bienvenido a STATSMAT.\nEsta aplicación está comprometida a brindarle servicios de estadística confiables y personalizados que impulsen su éxito.\n");
