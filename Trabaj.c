@@ -36,11 +36,11 @@ void menuPrincipal() {
     int mes,year;
     printf("\n--- Menu Principal ---\n");
     printf("Opciones:\n");
-    printf("a) Realizar acción A\n");
-    printf("b) Realizar acción B\n");
+    printf("a) Ordenadar de mayor a menor las engerias\n");
+    printf("b) Dependiendo de la energia: Hacer promedio o mes mas significativo de esa energia\n");
     printf("c) Salir del programa\n");
 
-    printf("\nEscribe tu opción: ");
+    printf("\nEscribe tu opcion: ");
     scanf(" %c", &opcion);
 
     switch (opcion) {
@@ -177,3 +177,4 @@ int main() {
 
     return 0;
 }
+
