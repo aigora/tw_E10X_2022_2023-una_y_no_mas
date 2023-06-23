@@ -2,8 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define MAX_LINE_LENGTH 1000
 #define N 50
+#define MAX_LINE_LENGTH 1000
+
 void verTabla(const char* generacion) {
     FILE* file = fopen(generacion, "r");
 
@@ -16,19 +17,34 @@ void verTabla(const char* generacion) {
 
     // Imprimir encabezado de la tabla
     fgets(line, sizeof(line), file);
-    printf("%s", line);
+    printf("%-16s", "Energía");
+
+    // Obtener los nombres de los meses
+    char* token = strtok(line, ",");
+    while (token != NULL) {
+        printf("%-12s", token);
+        token = strtok(NULL, ",");
+    }
+
+    printf("\n");
 
     // Imprimir separador de columnas
     fgets(line, sizeof(line), file);
-    printf("%s", line);
+    printf("%s\n", line);
 
     // Imprimir datos de la tabla
     while (fgets(line, sizeof(line), file) != NULL) {
-        printf("%s", line);
+        token = strtok(line, ",");
+        while (token != NULL) {
+            printf("%-12s", token);
+            token = strtok(NULL, ",");
+        }
+        printf("\n");
     }
 
     fclose(file);
 }
+
 
 
 void menuPrincipal() {
@@ -177,4 +193,3 @@ int main() {
 
     return 0;
 }
-
