@@ -6,7 +6,21 @@
 #define MAX_LINE_LENGTH 1000
 
 void verTabla(const char* generacion);
+void menuPrincipal();
 float calcularMedia(const char* nombreArchivoCSV, int columna);
+
+float mediaGuardada = 0.0;
+int contadorMedias = 0;
+
+// Estructura para almacenar una media junto con la fecha correspondiente
+struct MediaCalculada {
+    int mes;
+    int year;
+    float valor;
+    int contador;
+};
+
+struct MediaCalculada mediasCalculadas[100]; // Arreglo para almacenar las medias calculadas
 
 int main() {
     printf("<<<<WELCOME TO S T A T S M A R T>>>>\n");
@@ -84,11 +98,11 @@ void verTabla(const char* generacion) {
 
     fclose(file);
 }
-
 void menuPrincipal() {
     char opcion;
     int mes, year;
     const char* nombreArchivoCSV = "generacion.csv";
+    do{
     printf("\n--- Menu Principal ---\n");
     printf("Opciones:\n");
     printf("a) Ordenadar de mayor a menor \n");
@@ -123,14 +137,12 @@ void menuPrincipal() {
             system("cls");
             printf("\nLa fecha elegida es %i-%i\n", mes, year);
 
-            int columna = (year - 2021) * 12 + mes;
-
-            printf("A continuación se muestra una lista de los datos en esta fecha %i-%i ordenados de mayor a menor.\n\n");
-            printf("\nPulsa cualquier tecla para continuar.");
+            // Aquí puedes implementar la lógica para ordenar de mayor a menor
+            // los datos correspondientes a la fecha seleccionada
+            // y mostrar los resultados
+            printf("Funcionalidad no implementada.\n");
+            printf("\nPulsa cualquier tecla para volver al menú principal.");
             getchar();
-            fflush(stdin);
-            system("cls");
-
             break;
 
         case 'b':
@@ -153,43 +165,74 @@ void menuPrincipal() {
                     printf("El año introducido no está en nuestro registro de datos, intenta de nuevo: ");
                 }
             } while (year != 2021 && year != 2022);
-
-            int columnaa = (year - 2021) * 12 + mes;
+            getchar();
             system("cls");
 
-            printf("\nA continuacion se muestra la media del mes %i y ano %i.\n\n", mes, year);
+            printf("\nA continuacion se muestra la media del mes %i y año %i.\n\n", mes, year);
 
-        // Cálculo de la media en base a la tabla generacion
-        // Supongamos que el nombre del archivo CSV es "nombreArchivoCSV"
-        float media = calcularMedia(nombreArchivoCSV, columnaa);
+            int columna = (year - 2021) * 12 + mes;
 
-        // Mostrar el valor de la media
-        printf("La media del mes %i y ano %i es: %.2f\n", mes, year, media);
+            // Verificar si la media ya ha sido calculada previamente
+            int mediaCalculada = 0;
+            for (int i = 0; i < contadorMedias; i++) {
+                if (mediasCalculadas[i].mes == mes && mediasCalculadas[i].year == year) {
+                    printf("La media del mes %i y año %i ya ha sido calculada %d veces: %.2f\n", mes, year, mediasCalculadas[i].contador, mediasCalculadas[i].valor);
+                    mediaCalculada = 1;
+                    break;
+                }
+            }
 
-        // Guardar la media en un archivo
-        FILE* archivo = fopen("media.txt", "w");
-        if (archivo != NULL) {
-            fprintf(archivo, "Media del mes %i y ano %i: %.2f\n", mes, year, media);
-            fclose(archivo);
-            printf("La media se ha guardado.\n");
-        } else {
-            printf("No se pudo abrir el archivo para guardar la media.\n");
-        }
+            if (!mediaCalculada) {
+                // Cálculo de la media en base a la tabla generacion
+                float media = calcularMedia(nombreArchivoCSV, columna);
 
-        printf("\nPulsa cualquier tecla para finalizar.");
-        getchar();
-        break;
+                // Guardar la media en el arreglo mediasCalculadas
+                mediasCalculadas[contadorMedias].mes = mes;
+                mediasCalculadas[contadorMedias].year = year;
+                mediasCalculadas[contadorMedias].valor = media;
+                mediasCalculadas[contadorMedias].contador = 1;
+                contadorMedias++;
+
+                // Guardar la media en un archivo
+                FILE* archivo = fopen("media.txt", "w");
+                if (archivo != NULL) {
+                    fprintf(archivo, "Media del mes %i y año %i: %.2f\n", mes, year, media);
+                    fclose(archivo);
+                    printf("La media se ha guardado.\n");
+                } else {
+                    printf("No se pudo abrir el archivo para guardar la media.\n");
+                }
+
+                printf("\nLa media del mes %i y año %i es: %.2f\n", mes, year, media);
+            }
+
+            printf("\nPulsa Enter para volver al menú principal.");
+            getchar();  // Esperar la entrada del usuario
+            system("cls"); // Utiliza "cls" en Windows para limpiar la pantalla
+            menuPrincipal();
+            break;
 
         case 'c':
         case 'C':
             printf("\nSaliendo del programa...\n");
+            if (contadorMedias > 0) {
+                printf("Has calculado las siguientes medias:\n");
+                for (int i = 0; i < contadorMedias; i++) {
+                    printf("Media del mes %i y año %i: %.2f (calculada %d veces)\n", mediasCalculadas[i].mes, mediasCalculadas[i].year, mediasCalculadas[i].valor, mediasCalculadas[i].contador);
+                }
+            } else {
+                printf("No has realizado ninguna media.\n");
+            }
             exit(0);
 
         default:
+            system("cls");
             printf("\nOpción inválida. Inténtalo de nuevo.\n");
             break;
     }
+    }while (opcion != 'c' && opcion != 'C');
 }
+
 
 float calcularMedia(const char* nombreArchivoCSV, int columna) {
     FILE* file = fopen(nombreArchivoCSV, "r");
@@ -231,3 +274,4 @@ float calcularMedia(const char* nombreArchivoCSV, int columna) {
     float media = suma / contador;
     return media;
 }
+
