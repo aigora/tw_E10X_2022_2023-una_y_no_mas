@@ -5,6 +5,46 @@
 #define N 50
 #define MAX_LINE_LENGTH 1000
 
+void verTabla(const char* generacion);
+float calcularMedia(const char* nombreArchivoCSV, int columna);
+
+int main() {
+    printf("<<<<WELCOME TO S T A T S M A R T>>>>\n");
+    printf("\nA continuacion veras los valores de los registros obtenidos entre 2021 y 2022 de nuestras energias. Estan separadas en años y meses.");
+    printf("\n\nEstas energias son:");
+    printf("\n1. Hidraulica");
+    printf("\n2. Turbinacion de bombeo");
+    printf("\n3. Nuclear");
+    printf("\n4. Carbon");
+    printf("\n5. Motores diesel");
+    printf("\n6. Turbina de gas");
+    printf("\n7. Turbina de vapor");
+    printf("\n8. Ciclo combinado");
+    printf("\n9. Hidreolica");
+    printf("\n10. Eolica");
+    printf("\n11. Solar fotovoltaica");
+    printf("\n12. Otras renovables");
+    printf("\n13. Cogeneracion");
+    printf("\n14. Residuos no renovables");
+    printf("\n15. Residuos renovables");
+    printf("\n16. Generacion total");
+    printf("\n\nA continuacion la tabla con los valores de esas energias...");
+    printf("\n\nPresiona Enter para continuar...");
+    while (getchar() != '\n');
+
+    system("cls"); // Utiliza "cls" en Windows para limpiar la pantalla
+
+    verTabla("generacion.csv"); // Mostrar la tabla de generación
+
+    printf("\nPresiona Enter para continuar...");
+    while (getchar() != '\n');
+    system("cls"); // Utiliza "cls" en Windows para limpiar la pantalla
+
+    menuPrincipal();
+
+    return 0;
+}
+
 void verTabla(const char* generacion) {
     FILE* file = fopen(generacion, "r");
 
@@ -45,11 +85,10 @@ void verTabla(const char* generacion) {
     fclose(file);
 }
 
-
-
 void menuPrincipal() {
     char opcion;
-    int mes,year;
+    int mes, year;
+    const char* nombreArchivoCSV = "generacion.csv";
     printf("\n--- Menu Principal ---\n");
     printf("Opciones:\n");
     printf("a) Ordenadar de mayor a menor \n");
@@ -115,18 +154,31 @@ void menuPrincipal() {
                 }
             } while (year != 2021 && year != 2022);
 
-            system("cls");
-            printf("\nLa fecha elegida es %i-%i\n", mes, year);
-
             int columnaa = (year - 2021) * 12 + mes;
-
-            printf("A continuación se muestra una lista de los datos en esta fecha %i-%i ordenados de mayor a menor.\n\n");
-            printf("\nPulsa cualquier tecla para continuar.");
-            getchar();
-            fflush(stdin);
             system("cls");
-            
-            break;
+
+            printf("\nA continuacion se muestra la media del mes %i y ano %i.\n\n", mes, year);
+
+        // Cálculo de la media en base a la tabla generacion
+        // Supongamos que el nombre del archivo CSV es "nombreArchivoCSV"
+        float media = calcularMedia(nombreArchivoCSV, columnaa);
+
+        // Mostrar el valor de la media
+        printf("La media del mes %i y ano %i es: %.2f\n", mes, year, media);
+
+        // Guardar la media en un archivo
+        FILE* archivo = fopen("media.txt", "w");
+        if (archivo != NULL) {
+            fprintf(archivo, "Media del mes %i y ano %i: %.2f\n", mes, year, media);
+            fclose(archivo);
+            printf("La media se ha guardado.\n");
+        } else {
+            printf("No se pudo abrir el archivo para guardar la media.\n");
+        }
+
+        printf("\nPulsa cualquier tecla para finalizar.");
+        getchar();
+        break;
 
         case 'c':
         case 'C':
@@ -139,39 +191,43 @@ void menuPrincipal() {
     }
 }
 
-int main() {
-    printf("<<<<WELCOME TO S T A T S M A R T>>>>\n");
-    printf("\nA continuacion veras los valores de los registros obtenidos entre 2021 y 2022 de nuestras energias. Estan separadas en años y meses.");
-    printf("\n\nEstas energias son:");
-    printf("\n1. Hidraulica");
-    printf("\n2. Turbinacion de bombeo");
-    printf("\n3. Nuclear");
-    printf("\n4. Carbon");
-    printf("\n5. Motores diesel");
-    printf("\n6. Turbina de gas");
-    printf("\n7. Turbina de vapor");
-    printf("\n8. Ciclo combinado");
-    printf("\n9. Hidreolica");
-    printf("\n10. Eolica");
-    printf("\n11. Solar fotovoltaica");
-    printf("\n12. Otras renovables");
-    printf("\n13. Cogeneracion");
-    printf("\n14. Residuos no renovables");
-    printf("\n15. Residuos renovables");
-    printf("\n16. Generacion total");
-    printf("\n\nA continuacion la tabla con los valores de esas energias...");
-    printf("\n\nPresiona Enter para continuar...");
-    while (getchar() != '\n');
+float calcularMedia(const char* nombreArchivoCSV, int columna) {
+    FILE* file = fopen(nombreArchivoCSV, "r");
 
-    system("cls"); // Utiliza "cls" en Windows para limpiar la pantalla
+    if (file == NULL) {
+        printf("No se pudo abrir el archivo.\n");
+        return 0.0;
+    }
 
-    verTabla("generacion.csv"); // Mostrar la tabla de generación
+    char line[MAX_LINE_LENGTH];
+    float suma = 0.0;
+    int contador = 0;
 
-    printf("\nPresiona Enter para continuar...");
-    while (getchar() != '\n');
-    system("cls"); // Utiliza "cls" en Windows para limpiar la pantalla
+    // Saltar las primeras dos líneas
+    fgets(line, sizeof(line), file);
+    fgets(line, sizeof(line), file);
 
-    menuPrincipal();
+    // Leer los datos y calcular la media
+    while (fgets(line, sizeof(line), file) != NULL) {
+        char* token = strtok(line, ",");
+        int col = 0;
 
-    return 0;
+        while (token != NULL) {
+            if (col == columna) {
+                float valor = atof(token);
+                suma += valor;
+                contador++;
+                break;
+            }
+
+            token = strtok(NULL, ",");
+            col++;
+        }
+    }
+
+    fclose(file);
+
+    // Calcular la media
+    float media = suma / contador;
+    return media;
 }
