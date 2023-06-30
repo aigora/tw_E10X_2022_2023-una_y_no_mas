@@ -8,6 +8,8 @@
 void verTabla(const char* generacion);
 void menuPrincipal();
 float calcularMedia(const char* nombreArchivoCSV, int columna);
+void ordenarmayoramenor(const char *nombreArchivoCSV, const char *nombreArchivoTXT, int col);
+int comparardatos(const void *a, const void *b);
 
 float mediaGuardada = 0.0;
 int contadorMedias = 0;
@@ -21,44 +23,71 @@ struct MediaCalculada {
 };
 
 struct MediaCalculada mediasCalculadas[100]; // Arreglo para almacenar las medias calculadas
+typedef struct {
+    char energia[N];
+    double numeros[24];
+} Dato;
 
-int main() {
-    printf("<<<<WELCOME TO S T A T S M A R T>>>>\n");
-    printf("\nA continuacion veras los valores de los registros obtenidos entre 2021 y 2022 de nuestras energias. Estan separadas en años y meses.");
-    printf("\n\nEstas energias son:");
-    printf("\n1. Hidraulica");
-    printf("\n2. Turbinacion de bombeo");
-    printf("\n3. Nuclear");
-    printf("\n4. Carbon");
-    printf("\n5. Motores diesel");
-    printf("\n6. Turbina de gas");
-    printf("\n7. Turbina de vapor");
-    printf("\n8. Ciclo combinado");
-    printf("\n9. Hidreolica");
-    printf("\n10. Eolica");
-    printf("\n11. Solar fotovoltaica");
-    printf("\n12. Otras renovables");
-    printf("\n13. Cogeneracion");
-    printf("\n14. Residuos no renovables");
-    printf("\n15. Residuos renovables");
-    printf("\n16. Generacion total");
-    printf("\n\nA continuacion la tabla con los valores de esas energias...");
-    printf("\n\nPresiona Enter para continuar...");
-    while (getchar() != '\n');
+int columna;
 
-    system("cls"); // Utiliza "cls" en Windows para limpiar la pantalla
+int comparardatos(const void *a, const void *b) {
+    const Dato *datoA = (const Dato *)a;
+    const Dato *datoB = (const Dato *)b;
 
-    verTabla("generacion.csv"); // Mostrar la tabla de generación
+    double numeroA = datoA->numeros[columna - 1];
+    double numeroB = datoB->numeros[columna - 1];
 
-    printf("\nPresiona Enter para continuar...");
-    while (getchar() != '\n');
-    system("cls"); // Utiliza "cls" en Windows para limpiar la pantalla
-
-    menuPrincipal();
-
+    if (numeroA < numeroB) return 1;
+    if (numeroA > numeroB) return -1;
     return 0;
 }
 
+void ordenarmayoramenor(const char *nombreArchivoCSV, const char *nombreArchivoTXT, int col) {
+    FILE *archivoCSV = fopen(nombreArchivoCSV, "r");
+    FILE *archivoTXT = fopen(nombreArchivoTXT, "w");
+
+    if (archivoCSV == NULL || archivoTXT == NULL) {
+        printf("Error al abrir los archivos.\n");
+        return;
+    }
+
+    Dato datos[N];
+    char linea[MAX_LINE_LENGTH];
+    int indice = 0;
+
+    while (fgets(linea, sizeof(linea), archivoCSV) != NULL) {
+        char *token = strtok(linea, ",");
+        strncpy(datos[indice].energia, token, N);
+
+        for (int i = 0; i < 24; i++) {
+            token = strtok(NULL, ",");
+            datos[indice].numeros[i] = atof(token);
+        }
+
+        indice++;
+    }
+
+    int numDatos = indice;
+    columna = col;
+    qsort(datos, numDatos, sizeof(Dato), comparardatos);
+
+    printf("Energías del mes y año especificados ordenadas de mayor a menor:\n\n");
+    for (int i = 0; i < numDatos; i++) {
+        printf("%s,%.2lf\n", datos[i].energia, datos[i].numeros[columna - 1]);
+    }
+
+    for (int i = 0; i < numDatos; i++) {
+        fprintf(archivoTXT, "%s,%.2lf\n", datos[i].energia, datos[i].numeros[columna - 1]);
+    }
+
+    fclose(archivoCSV);
+    fclose(archivoTXT);
+    printf("\nPulsa Enter para volver al menú principal.");
+    getchar();
+    while (getchar() != '\n'); // Limpiar el buffer de entrada
+
+    system("cls");
+}
 void verTabla(const char* generacion) {
     FILE* file = fopen(generacion, "r");
 
@@ -98,6 +127,45 @@ void verTabla(const char* generacion) {
 
     fclose(file);
 }
+
+
+int main() {
+    printf("<<<<WELCOME TO S T A T S M A R T>>>>\n");
+    printf("\nA continuacion veras los valores de los registros obtenidos entre 2021 y 2022 de nuestras energias. Estan separadas en años y meses.");
+    printf("\n\nEstas energias son:");
+    printf("\n1. Hidraulica");
+    printf("\n2. Turbinacion de bombeo");
+    printf("\n3. Nuclear");
+    printf("\n4. Carbon");
+    printf("\n5. Motores diesel");
+    printf("\n6. Turbina de gas");
+    printf("\n7. Turbina de vapor");
+    printf("\n8. Ciclo combinado");
+    printf("\n9. Hidreolica");
+    printf("\n10. Eolica");
+    printf("\n11. Solar fotovoltaica");
+    printf("\n12. Otras renovables");
+    printf("\n13. Cogeneracion");
+    printf("\n14. Residuos no renovables");
+    printf("\n15. Residuos renovables");
+    printf("\n16. Generacion total");
+    printf("\n\nA continuacion la tabla con los valores de esas energias...");
+    printf("\n\nPresiona Enter para continuar...");
+    while (getchar() != '\n');
+
+    system("cls"); // Utiliza "cls" en Windows para limpiar la pantalla
+
+    verTabla("generacion.csv"); // Mostrar la tabla de generación
+
+    printf("\nPresiona Enter para continuar...");
+    while (getchar() != '\n');
+    system("cls"); // Utiliza "cls" en Windows para limpiar la pantalla
+
+    menuPrincipal();
+
+    return 0;
+}
+
 void menuPrincipal() {
     char opcion;
     int mes, year;
@@ -133,16 +201,15 @@ void menuPrincipal() {
                     printf("El año introducido no está en nuestro registro de datos, intenta de nuevo: ");
                 }
             } while (year != 2021 && year != 2022);
-
             system("cls");
             printf("\nLa fecha elegida es %i-%i\n", mes, year);
+            printf("\nLa fecha elegida es %i-%i\n", mes, year);
+            ordenarmayoramenor(nombreArchivoCSV, "ordeno.txt", mes);
+            printf("\nPulsa Enter para volver al menú principal.");
 
-            // Aquí puedes implementar la lógica para ordenar de mayor a menor
-            // los datos correspondientes a la fecha seleccionada
-            // y mostrar los resultados
-            printf("Funcionalidad no implementada.\n");
-            printf("\nPulsa cualquier tecla para volver al menú principal.");
-            getchar();
+
+
+
             break;
 
         case 'b':
@@ -274,4 +341,5 @@ float calcularMedia(const char* nombreArchivoCSV, int columna) {
     float media = suma / contador;
     return media;
 }
+
 
