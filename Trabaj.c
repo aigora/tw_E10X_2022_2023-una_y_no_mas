@@ -41,9 +41,9 @@ int comparardatos(const void *a, const void *b) {
     if (numeroA > numeroB) return -1;
     return 0;
 }
-
-void ordenarmayoramenor(const char *nombreArchivoCSV, const char *nombreArchivoTXT, int col) {
+void ordenarmayoramenor(const char *nombreArchivoCSV, const char *nombreArchivoTXT, int col){
     FILE *archivoCSV = fopen(nombreArchivoCSV, "r");
+    int columna = col;
     FILE *archivoTXT = fopen(nombreArchivoTXT, "w");
 
     if (archivoCSV == NULL || archivoTXT == NULL) {
@@ -54,6 +54,16 @@ void ordenarmayoramenor(const char *nombreArchivoCSV, const char *nombreArchivoT
     Dato datos[N];
     char linea[MAX_LINE_LENGTH];
     int indice = 0;
+
+    // Saltar las primeras 5 líneas (encabezados)
+    for (int i = 0; i < 5; i++) {
+        if (fgets(linea, sizeof(linea), archivoCSV) == NULL) {
+            printf("Error al leer el archivo.\n");
+            fclose(archivoCSV);
+            fclose(archivoTXT);
+            return;
+        }
+    }
 
     while (fgets(linea, sizeof(linea), archivoCSV) != NULL) {
         char *token = strtok(linea, ",");
@@ -82,6 +92,7 @@ void ordenarmayoramenor(const char *nombreArchivoCSV, const char *nombreArchivoT
 
     fclose(archivoCSV);
     fclose(archivoTXT);
+
     printf("\nPulsa Enter para volver al menú principal.");
     getchar();
     while (getchar() != '\n'); // Limpiar el buffer de entrada
@@ -203,12 +214,12 @@ void menuPrincipal() {
             } while (year != 2021 && year != 2022);
             system("cls");
             printf("\nLa fecha elegida es %i-%i\n", mes, year);
-            printf("\nLa fecha elegida es %i-%i\n", mes, year);
-            ordenarmayoramenor(nombreArchivoCSV, "ordeno.txt", mes);
+
+            columna = (year - 2021) * 12 + mes; // Asignar el valor correcto a 'columna'
+
+            ordenarmayoramenor(nombreArchivoCSV, "ordeno.txt", columna);
+
             printf("\nPulsa Enter para volver al menú principal.");
-
-
-
 
             break;
 
@@ -341,5 +352,3 @@ float calcularMedia(const char* nombreArchivoCSV, int columna) {
     float media = suma / contador;
     return media;
 }
-
-
