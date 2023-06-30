@@ -10,6 +10,8 @@ void menuPrincipal();
 float calcularMedia(const char* nombreArchivoCSV, int columna);
 void ordenarmayoramenor(const char *nombreArchivoCSV, const char *nombreArchivoTXT, int col);
 int comparardatos(const void *a, const void *b);
+void mostrarContenidoArchivo(const char* nombreArchivo);
+
 
 float mediaGuardada = 0.0;
 int contadorMedias = 0;
@@ -41,7 +43,7 @@ int comparardatos(const void *a, const void *b) {
     if (numeroA > numeroB) return -1;
     return 0;
 }
-void ordenarmayoramenor(const char *nombreArchivoCSV, const char *nombreArchivoTXT, int col){
+void ordenarmayoramenor(const char *nombreArchivoCSV, const char *nombreArchivoTXT, int col) {
     FILE *archivoCSV = fopen(nombreArchivoCSV, "r");
     int columna = col;
     FILE *archivoTXT = fopen(nombreArchivoTXT, "w");
@@ -84,9 +86,6 @@ void ordenarmayoramenor(const char *nombreArchivoCSV, const char *nombreArchivoT
     printf("Energías del mes y año especificados ordenadas de mayor a menor:\n\n");
     for (int i = 0; i < numDatos; i++) {
         printf("%s,%.2lf\n", datos[i].energia, datos[i].numeros[columna - 1]);
-    }
-
-    for (int i = 0; i < numDatos; i++) {
         fprintf(archivoTXT, "%s,%.2lf\n", datos[i].energia, datos[i].numeros[columna - 1]);
     }
 
@@ -99,6 +98,8 @@ void ordenarmayoramenor(const char *nombreArchivoCSV, const char *nombreArchivoT
 
     system("cls");
 }
+
+
 void verTabla(const char* generacion) {
     FILE* file = fopen(generacion, "r");
 
@@ -291,17 +292,23 @@ void menuPrincipal() {
             break;
 
         case 'c':
-        case 'C':
-            printf("\nSaliendo del programa...\n");
-            if (contadorMedias > 0) {
-                printf("Has calculado las siguientes medias:\n");
-                for (int i = 0; i < contadorMedias; i++) {
-                    printf("Media del mes %i y año %i: %.2f (calculada %d veces)\n", mediasCalculadas[i].mes, mediasCalculadas[i].year, mediasCalculadas[i].valor, mediasCalculadas[i].contador);
-                }
-            } else {
-                printf("No has realizado ninguna media.\n");
-            }
-            exit(0);
+case 'C':
+    printf("\nSaliendo del programa...\n\n");
+    if (contadorMedias > 0) {
+        printf("Has calculado las siguientes medias:\n");
+        for (int i = 0; i < contadorMedias; i++) {
+            printf("Media del mes %i y año %i: %.2f (calculada %d veces)\n", mediasCalculadas[i].mes, mediasCalculadas[i].year, mediasCalculadas[i].valor, mediasCalculadas[i].contador);
+        }
+    } else {
+        printf("No has realizado ninguna media.\n");
+    }
+
+    // Mostrar contenido del archivo "ordeno.txt"
+    printf("\nHas ordenado los siguientes valores:\n");
+    mostrarContenidoArchivo("ordeno.txt");
+
+    exit(0);
+
 
         default:
             system("cls");
@@ -351,4 +358,18 @@ float calcularMedia(const char* nombreArchivoCSV, int columna) {
     // Calcular la media
     float media = suma / contador;
     return media;
+}
+void mostrarContenidoArchivo(const char* nombreArchivo) {
+    FILE* archivo = fopen(nombreArchivo, "r");
+    if (archivo == NULL) {
+        printf("No se pudo abrir el archivo '%s'.\n", nombreArchivo);
+        return;
+    }
+
+    char linea[MAX_LINE_LENGTH];
+    while (fgets(linea, sizeof(linea), archivo) != NULL) {
+        printf("%s", linea);
+    }
+
+    fclose(archivo);
 }
