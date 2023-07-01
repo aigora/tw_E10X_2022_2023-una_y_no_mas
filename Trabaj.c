@@ -5,16 +5,11 @@
 #define N 50
 #define MAX_LINE_LENGTH 1000
 
-void verTabla(const char* generacion);
-void menuPrincipal();
-float calcularMedia(const char* nombreArchivoCSV, int columna);
-void ordenarmayoramenor(const char *nombreArchivoCSV, const char *nombreArchivoTXT, int col);
-int comparardatos(const void *a, const void *b);
-void mostrarContenidoArchivo(const char* nombreArchivo);
-
-
-float mediaGuardada = 0.0;
-int contadorMedias = 0;
+// Estructura para almacenar los datos de energía
+typedef struct {
+    char energia[N];
+    double numeros[24];
+} Dato;
 
 // Estructura para almacenar una media junto con la fecha correspondiente
 struct MediaCalculada {
@@ -24,14 +19,32 @@ struct MediaCalculada {
     int contador;
 };
 
-struct MediaCalculada mediasCalculadas[100]; // Arreglo para almacenar las medias calculadas
-typedef struct {
-    char energia[N];
-    double numeros[24];
-} Dato;
+// Estructura para almacenar los valores ordenados
+struct ValorOrdenado {
+    int mes;
+    int year;
+    double valor;
+};
 
+// Variables globales
+float mediaGuardada = 0.0;
+int contadorMedias = 0;
+int contadorValoresOrdenados = 0;
 int columna;
 
+// Declaración de funciones
+void verTabla(const char* generacion);
+void menuPrincipal();
+float calcularMedia(const char* nombreArchivoCSV, int columna);
+void ordenarmayoramenor(const char *nombreArchivoCSV, const char *nombreArchivoTXT, int col);
+int comparardatos(const void *a, const void *b);
+void mostrarContenidoArchivo(const char* nombreArchivo);
+
+// Arreglos para almacenar medias y valores ordenados
+struct MediaCalculada mediasCalculadas[100];
+struct ValorOrdenado valoresOrdenados[100];
+
+// Función para comparar dos datos en función de una columna específica
 int comparardatos(const void *a, const void *b) {
     const Dato *datoA = (const Dato *)a;
     const Dato *datoB = (const Dato *)b;
@@ -43,6 +56,7 @@ int comparardatos(const void *a, const void *b) {
     if (numeroA > numeroB) return -1;
     return 0;
 }
+
 void ordenarmayoramenor(const char *nombreArchivoCSV, const char *nombreArchivoTXT, int col) {
     FILE *archivoCSV = fopen(nombreArchivoCSV, "r");
     int columna = col;
@@ -88,9 +102,12 @@ void ordenarmayoramenor(const char *nombreArchivoCSV, const char *nombreArchivoT
         printf("%s,%.2lf\n", datos[i].energia, datos[i].numeros[columna - 1]);
         fprintf(archivoTXT, "%s,%.2lf\n", datos[i].energia, datos[i].numeros[columna - 1]);
     }
-
     fclose(archivoCSV);
     fclose(archivoTXT);
+
+    printf("\nValores ordenados:\n");
+    mostrarContenidoArchivo(nombreArchivoTXT);
+
 
     printf("\nPulsa Enter para volver al menú principal.");
     getchar();
@@ -98,8 +115,6 @@ void ordenarmayoramenor(const char *nombreArchivoCSV, const char *nombreArchivoT
 
     system("cls");
 }
-
-
 void verTabla(const char* generacion) {
     FILE* file = fopen(generacion, "r");
 
@@ -110,36 +125,41 @@ void verTabla(const char* generacion) {
 
     char line[MAX_LINE_LENGTH];
 
-    // Imprimir encabezado de la tabla
-    fgets(line, sizeof(line), file);
-    printf("%-16s", "Energía");
+    // Leer y mostrar la primera línea (encabezado de la tabla)
+    if (fgets(line, sizeof(line), file) != NULL) {
+        printf("%-16s", "Fechas");
 
-    // Obtener los nombres de los meses
-    char* token = strtok(line, ",");
-    while (token != NULL) {
-        printf("%-12s", token);
-        token = strtok(NULL, ",");
-    }
-
-    printf("\n");
-
-    // Imprimir separador de columnas
-    fgets(line, sizeof(line), file);
-    printf("%s\n", line);
-
-    // Imprimir datos de la tabla
-    while (fgets(line, sizeof(line), file) != NULL) {
-        token = strtok(line, ",");
+        char* token = strtok(line, ",");
         while (token != NULL) {
-            printf("%-12s", token);
+            printf("%-16s", token);
             token = strtok(NULL, ",");
         }
         printf("\n");
     }
 
+    // Leer y mostrar el resto de las líneas (datos de la tabla)
+    int fila = 1;
+    while (fgets(line, sizeof(line), file) != NULL) {
+        char* token = strtok(line, ",");
+        int col = 0;
+
+        while (token != NULL) {
+            if (col == 0) {
+                printf("%d-%s\t", fila, token);  // Mostrar valor de la columna Fechas
+                fila++;
+            } else {
+                printf("%-16s", token);  // Mostrar valor de las columnas de energía
+            }
+
+            token = strtok(NULL, ",");
+            col++;
+        }
+
+        printf("\n");
+    }
+
     fclose(file);
 }
-
 
 int main() {
     printf("<<<<WELCOME TO S T A T S M A R T>>>>\n");
@@ -302,10 +322,16 @@ case 'C':
     } else {
         printf("No has realizado ninguna media.\n");
     }
+    printf("\nValores ordenados:\n");
+if (contadorValoresOrdenados > 0) {
+    for (int i = 0; i < contadorValoresOrdenados; i++) {
+        printf("Valor del mes %i y año %i: %.2lf\n", valoresOrdenados[i].mes, valoresOrdenados[i].year, valoresOrdenados[i].valor);
+    }
+} else {
+    printf("No has ordenado ningún valor.\n");
+}
 
-    // Mostrar contenido del archivo "ordeno.txt"
-    printf("\nHas ordenado los siguientes valores:\n");
-    mostrarContenidoArchivo("ordeno.txt");
+
 
     exit(0);
 
