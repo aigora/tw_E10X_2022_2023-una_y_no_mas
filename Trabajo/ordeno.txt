@@ -1,0 +1,17 @@
+Generación total,21120.73
+Nuclear,4771.06
+Eólica,4712.96
+Ciclo combinado,4671.26
+Cogeneración,2119.15
+Solar fotovoltaica,1693.01
+Hidráulica,1174.97
+Carbón,568.63
+Otras renovables,374.91
+Turbinación bombeo,285.08
+Solar térmica,208.19
+Motores diésel,185.58
+Residuos no renovables,144.55
+Turbina de vapor,102.63
+Residuos renovables,72.93
+Turbina de gas,34.33
+Hidroeólica,1.48
