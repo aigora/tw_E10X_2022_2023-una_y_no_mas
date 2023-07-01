@@ -5,7 +5,7 @@
 #define N 50
 #define MAX_LINE_LENGTH 1000
 
-// Estructura para almacenar los datos de energÌa
+// Estructura para almacenar los datos de energ√≠a
 typedef struct {
     char energia[N];
     double numeros[24];
@@ -32,7 +32,7 @@ int contadorMedias = 0;
 int contadorValoresOrdenados = 0;
 int columna;
 
-// DeclaraciÛn de funciones
+// Declaraci√≥n de funciones
 void verTabla(const char* generacion);
 void menuPrincipal();
 int comparardatos(const void *a, const void *b);
@@ -71,18 +71,18 @@ int main() {
 
     system("cls"); // Utiliza "cls" en Windows para limpiar la pantalla
 
-    verTabla("generacion.csv"); // Mostrar la tabla de generaciÛn
+    verTabla("generacion.csv"); // Mostrar la tabla de generaci√≥n
 
     printf("\nPresiona Enter para continuar...");
     while (getchar() != '\n');
-    system("cls"); // Utiliza "cls" en Windows para limpiar la pantalla
+    system("cls"); 
 
     menuPrincipal();
 
     return 0;
 }
 
-//FunciÛn para ver los valores del fichero generacion
+//Funci√≥n para ver los valores del fichero generacion
 void verTabla(const char* generacion) {
     FILE* file = fopen(generacion, "r");
 
@@ -93,7 +93,7 @@ void verTabla(const char* generacion) {
 
     char line[MAX_LINE_LENGTH];
 
-    // Leer y mostrar la primera lÌnea (encabezado de la tabla)
+    // Leer y mostrar la primera l√≠nea (encabezado de la tabla)
     if (fgets(line, sizeof(line), file) != NULL) {
         printf("%-16s", "Fechas");
 
@@ -105,7 +105,7 @@ void verTabla(const char* generacion) {
         printf("\n");
     }
 
-    // Leer y mostrar el resto de las lÌneas (datos de la tabla)
+    // Leer y mostrar el resto de las l√≠neas (datos de la tabla)
     int fila = 1;
     while (fgets(line, sizeof(line), file) != NULL) {
         char* token = strtok(line, ",");
@@ -116,7 +116,7 @@ void verTabla(const char* generacion) {
                 printf("%d-%s\t", fila, token);  // Mostrar valor de la columna Fechas
                 fila++;
             } else {
-                printf("%-16s", token);  // Mostrar valor de las columnas de energÌa
+                printf("%-16s", token);  // Mostrar valor de las columnas de energ√≠a
             }
 
             token = strtok(NULL, ",");
@@ -129,7 +129,7 @@ void verTabla(const char* generacion) {
     fclose(file);
 }
 
-//FunciÛn menu principal aqui decides que quieres calcular
+//Funci√≥n menu principal aqui decides que quieres calcular
 void menuPrincipal() {
     char opcion;
     int mes, year;
@@ -148,7 +148,7 @@ void menuPrincipal() {
         case 'a':
 case 'A':
     system("cls");
-    printf("Elija la fecha de la que quieres buscar datos entre los aÒos 2021-2022:\n\n");
+    printf("Elija la fecha de la que quieres buscar datos entre los a√±os 2021-2022:\n\n");
     printf("Introduzca el mes: ");
 
     do {
@@ -178,7 +178,7 @@ case 'A':
         case 'b':
         case 'B':
             system("cls");
-            printf("Elija la fecha de la que quieres buscar datos entre los aÒos 2021-2022:\n\n");
+            printf("Elija la fecha de la que quieres buscar datos entre los a√±os 2021-2022:\n\n");
             printf("Introduzca el mes: ");
 
             do {
@@ -192,7 +192,7 @@ case 'A':
             do {
                 scanf("%i", &year);
                 if (year != 2021 && year != 2022) {
-                    printf("El aÒo introducido no est· en nuestro registro de datos, intenta de nuevo: ");
+                    printf("El a√±o introducido no est√° en nuestro registro de datos, intenta de nuevo: ");
                 }
             } while (year != 2021 && year != 2022);
             getchar();
@@ -213,7 +213,7 @@ case 'A':
             }
 
             if (!mediaCalculada) {
-                // C·lculo de la media en base a la tabla generacion
+                // C√°lculo de la media en base a la tabla generacion
                 float media = calcularMedia(nombreArchivoCSV, columna);
 
                 // Guardar la media en el arreglo mediasCalculadas
@@ -226,14 +226,14 @@ case 'A':
                 // Guardar la media en un archivo
                 FILE* archivo = fopen("media.txt", "w");
                 if (archivo != NULL) {
-                    fprintf(archivo, "Media del mes %i y aÒo %i: %.2f\n", mes, year, media);
+                    fprintf(archivo, "Media del mes %i y a√±o %i: %.2f\n", mes, year, media);
                     fclose(archivo);
                     printf("La media se ha guardado.\n");
                 } else {
                     printf("No se pudo abrir el archivo para guardar la media.\n");
                 }
 
-                printf("\nLa media del mes %i y aÒo %i es: %.2f\n", mes, year, media);
+                printf("\nLa media del mes %i y a√±o %i es: %.2f\n", mes, year, media);
             }
 
             printf("\nPulsa Enter para volver al Menu Principal.");
@@ -268,7 +268,7 @@ case 'C':
     }while (opcion != 'c' && opcion != 'C');
 }
 
-// FunciÛn para comparar dos datos en funciÛn de una columna especÌfica
+// Funci√≥n para comparar dos datos en funci√≥n de una columna espec√≠fica
 int comparardatos(const void *a, const void *b) {
     const Dato *datoA = (const Dato *)a;
     const Dato *datoB = (const Dato *)b;
@@ -281,7 +281,7 @@ int comparardatos(const void *a, const void *b) {
     return 0;
 }
 
-//Funcion para ordenar los valores de mayor a menor dependiendo del mes y aÒo introducido por teclado
+//Funcion para ordenar los valores de mayor a menor dependiendo del mes y a√±o introducido por teclado
 void ordenarmayoramenor(const char *nombreArchivoCSV, const char *nombreArchivoTXT, int col) {
     FILE *archivoCSV = fopen(nombreArchivoCSV, "r");
     int columna = col;
@@ -296,7 +296,7 @@ void ordenarmayoramenor(const char *nombreArchivoCSV, const char *nombreArchivoT
     char linea[MAX_LINE_LENGTH];
     int indice = 0;
 
-    // Saltar las primeras 5 lÌneas (encabezados)
+    // Saltar las primeras 5 l√≠neas (encabezados)
     for (int i = 0; i < 5; i++) {
         if (fgets(linea, sizeof(linea), archivoCSV) == NULL) {
             printf("Error al leer el archivo.\n");
@@ -331,13 +331,13 @@ void ordenarmayoramenor(const char *nombreArchivoCSV, const char *nombreArchivoT
     fclose(archivoTXT);
 
     printf("\nSe han guardado los datos ordenados en el archivo.\n");
-    printf("Pulsa Enter para volver al men˙ principal.");
+    printf("Pulsa Enter para volver al men√∫ principal.");
     while (getchar() != '\n'); // Limpiar el buffer de entrada
 
     system("cls");
 }
 
-//FunciÛn para calcular la media del mes y aÒo introducido por teclado
+//Funci√≥n para calcular la media del mes y a√±o introducido por teclado
 float calcularMedia(const char* nombreArchivoCSV, int columna) {
     FILE* file = fopen(nombreArchivoCSV, "r");
 
@@ -350,7 +350,7 @@ float calcularMedia(const char* nombreArchivoCSV, int columna) {
     float suma = 0.0;
     int contador = 0;
 
-    // Saltar las primeras dos lÌneas
+    // Saltar las primeras dos l√≠neas
     fgets(line, sizeof(line), file);
     fgets(line, sizeof(line), file);
 
