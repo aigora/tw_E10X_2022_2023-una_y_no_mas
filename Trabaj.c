@@ -56,7 +56,6 @@ int comparardatos(const void *a, const void *b) {
     if (numeroA > numeroB) return -1;
     return 0;
 }
-
 void ordenarmayoramenor(const char *nombreArchivoCSV, const char *nombreArchivoTXT, int col) {
     FILE *archivoCSV = fopen(nombreArchivoCSV, "r");
     int columna = col;
@@ -105,16 +104,15 @@ void ordenarmayoramenor(const char *nombreArchivoCSV, const char *nombreArchivoT
     fclose(archivoCSV);
     fclose(archivoTXT);
 
-    printf("\nValores ordenados:\n");
-    mostrarContenidoArchivo(nombreArchivoTXT);
-
-
-    printf("\nPulsa Enter para volver al menú principal.");
+    printf("\nSe han guardado los datos ordenados en el archivo.\n");
+    printf("Pulsa Enter para volver al menú principal.");
     getchar();
     while (getchar() != '\n'); // Limpiar el buffer de entrada
 
     system("cls");
 }
+
+
 void verTabla(const char* generacion) {
     FILE* file = fopen(generacion, "r");
 
@@ -214,35 +212,36 @@ void menuPrincipal() {
 
     switch (opcion) {
         case 'a':
-        case 'A':
-            system("cls");
-            printf("Elija la fecha de la que quieres buscar datos entre los años 2021-2022:\n\n");
-            printf("Introduzca el mes: ");
+case 'A':
+    system("cls");
+    printf("Elija la fecha de la que quieres buscar datos entre los años 2021-2022:\n\n");
+    printf("Introduzca el mes: ");
 
-            do {
-                scanf("%i", &mes);
-                if (mes < 1 || mes > 12) {
-                    printf("Mes incorrecto, intenta de nuevo: ");
-                }
-            } while (mes < 1 || mes > 12);
+    do {
+        scanf("%i", &mes);
+        if (mes < 1 || mes > 12) {
+            printf("Mes incorrecto, intenta de nuevo: ");
+        }
+    } while (mes < 1 || mes > 12);
 
-            printf("Introduzca el año: ");
-            do {
-                scanf("%i", &year);
-                if (year != 2021 && year != 2022) {
-                    printf("El año introducido no está en nuestro registro de datos, intenta de nuevo: ");
-                }
-            } while (year != 2021 && year != 2022);
-            system("cls");
-            printf("\nLa fecha elegida es %i-%i\n", mes, year);
+    printf("Introduzca el año: ");
+    do {
+        scanf("%i", &year);
+        if (year != 2021 && year != 2022) {
+            printf("El año introducido no está en nuestro registro de datos, intenta de nuevo: ");
+        }
+    } while (year != 2021 && year != 2022);
+    getchar();
+    system("cls");
+    printf("\nLa fecha elegida es %i-%i\n", mes, year);
 
-            columna = (year - 2021) * 12 + mes; // Asignar el valor correcto a 'columna'
+    columna = (year - 2021) * 12 + mes; // Asignar el valor correcto a 'columna'
 
-            ordenarmayoramenor(nombreArchivoCSV, "ordeno.txt", columna);
+    ordenarmayoramenor(nombreArchivoCSV, "ordeno.txt", columna);
 
-            printf("\nPulsa Enter para volver al menú principal.");
+    printf("\nPulsa Enter para volver al menú principal.");
 
-            break;
+    break;
 
         case 'b':
         case 'B':
@@ -310,8 +309,7 @@ void menuPrincipal() {
             system("cls"); // Utiliza "cls" en Windows para limpiar la pantalla
             menuPrincipal();
             break;
-
-        case 'c':
+            case 'c':
 case 'C':
     printf("\nSaliendo del programa...\n\n");
     if (contadorMedias > 0) {
@@ -323,18 +321,11 @@ case 'C':
         printf("No has realizado ninguna media.\n");
     }
     printf("\nValores ordenados:\n");
-if (contadorValoresOrdenados > 0) {
-    for (int i = 0; i < contadorValoresOrdenados; i++) {
-        printf("Valor del mes %i y año %i: %.2lf\n", valoresOrdenados[i].mes, valoresOrdenados[i].year, valoresOrdenados[i].valor);
-    }
-} else {
-    printf("No has ordenado ningún valor.\n");
-}
+    mostrarContenidoArchivo("ordeno.txt");
 
-
-
+    printf("\nPulsa Enter para salir del programa.");
+    getchar();
     exit(0);
-
 
         default:
             system("cls");
@@ -385,10 +376,11 @@ float calcularMedia(const char* nombreArchivoCSV, int columna) {
     float media = suma / contador;
     return media;
 }
-void mostrarContenidoArchivo(const char* nombreArchivo) {
-    FILE* archivo = fopen(nombreArchivo, "r");
+void mostrarContenidoArchivo(const char *nombreArchivo) {
+    FILE *archivo = fopen(nombreArchivo, "r");
+
     if (archivo == NULL) {
-        printf("No se pudo abrir el archivo '%s'.\n", nombreArchivo);
+        printf("Error al abrir el archivo.\n");
         return;
     }
 
